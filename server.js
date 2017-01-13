@@ -113,6 +113,10 @@ slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
   }
 })
 
+slapp.command('bible', (msg) => {
+  msg.set('You asked for the verse: ', msg);
+})
+
 // attach Slapp to express server
 var server = slapp.attachToExpress(express())
 
