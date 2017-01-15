@@ -15,14 +15,6 @@ var slapp = Slapp({
   context: Context()
 })
 
-module.exports = (app) => {
-
-  slapp.command('/bible', /.*/, (msg) => {
-    msg.respond('test')
-  })
-}
-
-
 var HELP_TEXT = `
 I will respond to the following messages:
 \`help\` - to see this message.
@@ -113,9 +105,9 @@ slapp.message('attachment', ['mention', 'direct_message'], (msg) => {
 })
 
 // Testing
-//slapp.command('bible', /.*/, (msg) => {
-//  msg.say('Received slash command for Bible')
-//})
+slapp.command('bible', /.*/, (msg) => {
+  msg.say('Received slash command for Bible')
+})
 
 // Catch-all for any other responses not handled above
 slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
