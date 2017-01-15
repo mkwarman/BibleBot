@@ -114,7 +114,7 @@ slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
 })
 
 slapp.command('bible', (msg) => {
-  msg.say('Received slash command for Bible');
+  msg.respond('Received slash command for Bible');
 })
 
 // attach Slapp to express server
