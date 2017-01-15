@@ -15,6 +15,13 @@ var slapp = Slapp({
   context: Context()
 })
 
+module.exports = (app) => {
+
+  slapp.command('/inorout', /.*/, (msg) => {
+    msg.respond('test')
+  })
+}
+
 
 var HELP_TEXT = `
 I will respond to the following messages:
