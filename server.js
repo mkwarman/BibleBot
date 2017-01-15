@@ -105,16 +105,17 @@ slapp.message('attachment', ['mention', 'direct_message'], (msg) => {
   })
 })
 
+// Testing
+slapp.message('bible', ['direct_mention', 'direct_message'], (msg) => {
+  msg.say('Received slash command for Bible')
+})
+
 // Catch-all for any other responses not handled above
 slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
   // respond only 40% of the time
   if (Math.random() < 0.4) {
     msg.say([':wave:', ':pray:', ':raised_hands:'])
   }
-})
-
-slapp.message('bible', ['direct_mention', 'direct_message'], (msg) => {
-  msg.say('Received slash command for Bible')
 })
 
 // attach Slapp to express server
