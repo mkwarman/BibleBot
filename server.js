@@ -17,7 +17,7 @@ var slapp = Slapp({
 
 module.exports = (app) => {
 
-  slapp.command('/inorout', /.*/, (msg) => {
+  slapp.command('/bible', /.*/, (msg) => {
     msg.respond('test')
   })
 }
@@ -113,9 +113,9 @@ slapp.message('attachment', ['mention', 'direct_message'], (msg) => {
 })
 
 // Testing
-slapp.command('bible', /.*/, (msg) => {
-  msg.say('Received slash command for Bible')
-})
+//slapp.command('bible', /.*/, (msg) => {
+//  msg.say('Received slash command for Bible')
+//})
 
 // Catch-all for any other responses not handled above
 slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
