@@ -113,7 +113,7 @@ slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
   }
 })
 
-slapp.command('bible', (msg) => {
+slapp.message('bible', ['direct_mention', 'direct_message'], (msg) => {
   msg.respond('Received slash command for Bible');
 })
 
