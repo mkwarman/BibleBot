@@ -105,9 +105,9 @@ slapp.message('attachment', ['mention', 'direct_message'], (msg) => {
 })
 
 // Testing
-slapp.command('bible', /.*/, (msg) => {
-  msg.say('Received slash command for Bible')
-})
+//slapp.command('bible', /.*/, (msg) => {
+//  msg.say('Received slash command for Bible')
+//})
 
 // Catch-all for any other responses not handled above
 slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
@@ -119,6 +119,28 @@ slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
 
 // attach Slapp to express server
 var server = slapp.attachToExpress(express())
+
+server.route('/bible')
+  .get(function (req, res) {
+    res.sendStatus(200)
+  })
+  .post(bodyParser.urlencoded({ extended: true }), function (req, res) {
+    if (req.body.token !== VERIFY_TOKEN) {
+      return res.sendStatus(401)
+    }
+
+    var message = 'boopbeep'
+
+    // Handle any help requests
+    if (req.body.text === 'help') {
+      message = "Sorry, I can't offer much help, just here to beep and boop"
+    }
+
+    res.json({
+      response_type: 'ephemeral',
+      text: message
+    })
+  })
 
 // start http server
 server.listen(port, (err) => {
