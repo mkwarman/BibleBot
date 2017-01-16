@@ -2,4 +2,7 @@ name: BibleBot
 email: mkwarman@gmail.com
 description: Bible Utility Bot (In Development)
 avatar: .beepboop/avatar.png
+slackscopes:
+  - bot
+  - commands
 # To learn everything supported in the bot.yml file, visit https://beepboophq.com/docs/article/bot-yml
