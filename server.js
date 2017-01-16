@@ -153,16 +153,16 @@ function sendRequest(verse, msg) {
 }
 
 function reply(body, msg) {
-  var verse = body.replace('/<\/?b>/g', '*')
-                  .replace('/<\/?i>/g', '_')
-                  .replace('/<.+?>/g', '')
+  var verse = body.replace(/<\/?b>/g, '*')
+                  .replace(/<\/?i>/g, '_')
+                  .replace(/<.+?>/g, '');
   console.log('got this from sendRequest():', verse);
   msg.say('Here\'s your verse!\n' + verse);
 }
 
 function parseVerse(text) {
-  var verse = 'John+3:16;'
-  return verse
+  var verse = 'John+3:16';
+  return verse;
 }
 
 // attach Slapp to express server
