@@ -109,7 +109,7 @@ slapp.message('attachment', ['mention', 'direct_message'], (msg) => {
 slapp.command('/bible', /.*/, (msg, text) => {
   console.log('received bible command');
   msg.say('Received slash command for Bible. Command entered:' + text);
-  sendRequest(text);
+  sendRequest(text, msg);
 })
 
 // Catch-all for any other responses not handled above
