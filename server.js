@@ -128,6 +128,8 @@ function sendRequest(verse, msg) {
     path: '/api/?passage=' + verse + '&formatting=full',
   }
 
+  console.log('Request URL: labs.bible.org/api/?passage=' + verse + '&formatting=full');
+
   var request = http.get(options, function(response){
     console.log('STATUS: ' + response.statusCode);
     console.log('HEADERS: ' + JSON.stringify(response.headers));
