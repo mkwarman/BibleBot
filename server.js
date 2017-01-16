@@ -164,7 +164,7 @@ function reply(body, msg) {
 }
 
 function parseVerse(text) {
-  var verse = text;
+  var verse = text.replace(' ', '+');
   return verse;
 }
 
