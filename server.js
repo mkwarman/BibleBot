@@ -4,6 +4,7 @@ const express = require('express')
 const Slapp = require('slapp')
 const ConvoStore = require('slapp-convo-beepboop')
 const Context = require('slapp-context-beepboop')
+const http = require('http');
 
 // use `PORT` env var on Beep Boop - default to 3000 locally
 var port = process.env.PORT || 3000
@@ -109,6 +110,7 @@ slapp.command('/bible', /.*/, (msg, text) => {
   console.log('received bible command')
   console.log('msg: ', msg)
   console.log('text: ', text)
+  sendRequest()
   msg.say('Received slash command for Bible. Command entered:' + text)
 })
 
@@ -119,6 +121,17 @@ slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
     msg.say([':wave:', ':pray:', ':raised_hands:'])
   }
 })
+
+// Send HTTP Request
+function sendRequest(callback) {
+  return http.get({
+    // http://labs.bible.org/api/?verse
+    host: 'http://labs.bible.org/',
+    path: '/api/?passage=John+3:16-17',
+  }, function(response){
+    console.log('response:', response);
+  })
+}
 
 // attach Slapp to express server
 var server = slapp.attachToExpress(express())
