@@ -155,7 +155,7 @@ function sendRequest(verse, msg) {
 function reply(body, msg) {
   var verse = body.replace(/<\/?b>/g, '*')
                   .replace(/<\/?i>/g, '_')
-                  .replace(/<p.{0,}?>/g, '\n')
+                  .replace(/<p.{0,}?>/g, '\n>')
                   .replace(/<.+?>/g, '');
   console.log('got this from sendRequest():', verse);
   msg.say('Here\'s your verse!\n>' + verse);
