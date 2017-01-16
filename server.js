@@ -125,7 +125,7 @@ function sendRequest(verse, msg) {
   var body;
   var options = {
     host: 'labs.bible.org',
-    path: '/api/?passage=John' + verse + '&formatting=full',
+    path: '/api/?passage=' + verse + '&formatting=full',
   }
 
   var request = http.get(options, function(response){
@@ -161,7 +161,7 @@ function reply(body, msg) {
 }
 
 function parseVerse(text) {
-  var verse = 'John+3:16';
+  var verse = 'Lk+2:1;+4:4';
   return verse;
 }
 
