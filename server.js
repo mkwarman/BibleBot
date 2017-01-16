@@ -123,7 +123,7 @@ slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
 })
 
 // Send HTTP Request
-function sendRequest(callback): string {
+function sendRequest(callback) {
   var body;
   var options = {
     host: 'labs.bible.org',
