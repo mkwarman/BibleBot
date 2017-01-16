@@ -109,6 +109,7 @@ slapp.message('attachment', ['mention', 'direct_message'], (msg) => {
 slapp.command('/bible', /.*/, (msg, text) => {
   console.log('received bible command');
   msg.say('Received slash command for Bible. Command entered:' + text);
+  sendRequest(text);
 })
 
 // Catch-all for any other responses not handled above
@@ -120,7 +121,7 @@ slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
 })
 
 // Send HTTP Request
-function sendRequest() {
+function sendRequest(text) {
   var body;
   var options = {
     host: 'labs.bible.org',
