@@ -108,13 +108,13 @@ slapp.message('attachment', ['mention', 'direct_message'], (msg) => {
 // Testing
 slapp.command('/bible', /.*/, (msg, text) => {
   var verse = '';
-  console.log('received bible command')
-  console.log('msg: ', msg)
-  console.log('text: ', text)
-  var verse = sendRequest();
-  console.log('got this from sendRequest():', verse)
-  msg.say('Received slash command for Bible. Command entered:' + text)
-  msg.say('Here\'s your verse!\n' + verse)
+  console.log('received bible command');
+  console.log('msg: ', msg);
+  console.log('text: ', text);
+  verse = sendRequest();
+  console.log('got this from sendRequest():', verse);
+  msg.say('Received slash command for Bible. Command entered:' + text);
+  msg.say('Here\'s your verse!\n' + verse);
 })
 
 // Catch-all for any other responses not handled above
@@ -126,7 +126,7 @@ slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
 })
 
 // Send HTTP Request
-function sendRequest(callback) {
+function sendRequest() {
   var body;
   var options = {
     host: 'labs.bible.org',
@@ -141,23 +141,20 @@ function sendRequest(callback) {
     var bodyStream = [];
     response.on('data', function(chunk) {
       // Partially streamed body
+      console.log('-----got chunk-----');
       bodyStream.push(chunk);
     }).on('end', function() {
       // Completely streamed body
+      console.log('-----finished body-----');
       body = Buffer.concat(bodyStream);
       console.log('BODY: ' + body);
-      reply(body.stringify);
-      return body
+      return body;
     })
   });
 
   request.on('error', function(e) {
     console.log('error occurred in HTTP GET request: ', e.message);
   });
-}
-
-function reply(body) {
-  console.log('got body:', body);
 }
 
 // attach Slapp to express server
