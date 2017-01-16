@@ -126,7 +126,7 @@ slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
 function sendRequest(callback) {
   return http.get({
     // http://labs.bible.org/api/?verse
-    host: 'http://labs.bible.org/',
+    host: 'labs.bible.org',
     path: '/api/?passage=John+3:16-17',
   }, function(response){
     console.log('response:', response);
