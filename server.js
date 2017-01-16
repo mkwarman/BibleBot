@@ -145,15 +145,13 @@ function sendRequest(callback) {
       body = Buffer.concat(bodyStream);
       console.log('BODY: ' + body);
       // ...and/or process the entire body here.
+      return body
     })
   });
 
   request.on('error', function(e) {
     console.log('error occurred in HTTP GET request: ', e.message);
   });
-
-  console.log('body before return', body);
-  return body;
 }
 
 // attach Slapp to express server
