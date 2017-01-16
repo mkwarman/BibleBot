@@ -139,12 +139,13 @@ function sendRequest(callback) {
     // Buffer the body entirely for processing as a whole.
     var bodyStream = [];
     response.on('data', function(chunk) {
-      // You can process streamed parts here...
+      // Partially streamed body
       bodyStream.push(chunk);
     }).on('end', function() {
+      // Completely streamed body
       body = Buffer.concat(bodyStream);
       console.log('BODY: ' + body);
-      // ...and/or process the entire body here.
+      reply(body);
       return body
     })
   });
@@ -152,6 +153,10 @@ function sendRequest(callback) {
   request.on('error', function(e) {
     console.log('error occurred in HTTP GET request: ', e.message);
   });
+}
+
+function reply(msg) {
+  console.log('got msg:', msg);
 }
 
 // attach Slapp to express server
