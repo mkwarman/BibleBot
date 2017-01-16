@@ -112,6 +112,7 @@ slapp.command('/bible', /.*/, (msg, text) => {
   console.log('text: ', text)
   var verse = sendRequest()
   msg.say('Received slash command for Bible. Command entered:' + text)
+  msg.say('Here\'s your verse!\n' + verse)
 })
 
 // Catch-all for any other responses not handled above
