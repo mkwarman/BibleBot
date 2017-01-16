@@ -139,7 +139,7 @@ function sendRequest(callback) {
       // You can process streamed parts here...
       bodyStream.push(chunk);
     }).on('end', function() {
-      var body = Buffer.concat(bodyChunks);
+      var body = Buffer.concat(bodyStream);
       console.log('BODY: ' + body);
       // ...and/or process the entire body here.
     })
