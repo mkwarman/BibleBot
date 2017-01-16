@@ -158,7 +158,7 @@ function reply(body, msg) {
                   .replace(/<p.{0,}?>/g, '\n')
                   .replace(/<.+?>/g, '');
   console.log('got this from sendRequest():', verse);
-  msg.say('Here\'s your verse!\n' + verse);
+  msg.say('Here\'s your verse!\n>' + verse);
 }
 
 function parseVerse(text) {
