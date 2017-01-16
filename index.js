@@ -16,7 +16,7 @@ if (!PORT) {
 var app = express()
 app.use(morgan('dev'))
 
-app.route('/beepboop')
+app.route('/bible')
   .get(function (req, res) {
     res.sendStatus(200)
   })
