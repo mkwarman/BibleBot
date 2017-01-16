@@ -121,7 +121,7 @@ slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
 })
 
 // Send HTTP Request
-function sendRequest(text) {
+function sendRequest(text, msg) {
   var body;
   var options = {
     host: 'labs.bible.org',
@@ -141,9 +141,9 @@ function sendRequest(text) {
     }).on('end', function() {
       // Completely streamed body
       console.log('-----finished body-----');
-      body = Buffer.concat(bodyStream);
+      body = Buffer.concat(bodyStream).toString();
       console.log('BODY: ' + body);
-      reply(body);
+      reply(body, msg);
     })
   });
 
@@ -152,7 +152,7 @@ function sendRequest(text) {
   });
 }
 
-function reply(body) {
+function reply(body, msg) {
   var verse = body;
   console.log('got this from sendRequest():', verse);
   msg.say('Here\'s your verse!\n' + verse);
