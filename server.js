@@ -109,7 +109,7 @@ slapp.message('attachment', ['mention', 'direct_message'], (msg) => {
 slapp.command('/bible', /.*/, (msg, text) => {
   console.log('received bible command');
   msg.say('Received slash command for Bible. Command entered:' + text);
-  sendRequest(text, msg);
+  sendRequest(parseVerse(text), msg);
 })
 
 // Catch-all for any other responses not handled above
@@ -121,11 +121,11 @@ slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
 })
 
 // Send HTTP Request
-function sendRequest(text, msg) {
+function sendRequest(verse, msg) {
   var body;
   var options = {
     host: 'labs.bible.org',
-    path: '/api/?passage=John+3:16-17',
+    path: '/api/?passage=John' + verse + '&formatting=full',
   }
 
   var request = http.get(options, function(response){
@@ -153,9 +153,16 @@ function sendRequest(text, msg) {
 }
 
 function reply(body, msg) {
-  var verse = body;
+  var verse = body.replace('/<\/?b>/g', '*')
+                  .replace('/<\/?i>/g', '_')
+                  .replace('/<.+?>/g', '')
   console.log('got this from sendRequest():', verse);
   msg.say('Here\'s your verse!\n' + verse);
+}
+
+function parseVerse(text) {
+
+  return verse
 }
 
 // attach Slapp to express server
