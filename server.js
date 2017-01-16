@@ -107,14 +107,8 @@ slapp.message('attachment', ['mention', 'direct_message'], (msg) => {
 
 // Testing
 slapp.command('/bible', /.*/, (msg, text) => {
-  var verse = '';
   console.log('received bible command');
-  console.log('msg: ', msg);
-  console.log('text: ', text);
-  verse = sendRequest();
-  console.log('got this from sendRequest():', verse);
   msg.say('Received slash command for Bible. Command entered:' + text);
-  msg.say('Here\'s your verse!\n' + verse);
 })
 
 // Catch-all for any other responses not handled above
@@ -148,13 +142,19 @@ function sendRequest() {
       console.log('-----finished body-----');
       body = Buffer.concat(bodyStream);
       console.log('BODY: ' + body);
-      return body;
+      reply(body);
     })
   });
 
   request.on('error', function(e) {
     console.log('error occurred in HTTP GET request: ', e.message);
   });
+}
+
+function reply(body) {
+  var verse = body;
+  console.log('got this from sendRequest():', verse);
+  msg.say('Here\'s your verse!\n' + verse);
 }
 
 // attach Slapp to express server
