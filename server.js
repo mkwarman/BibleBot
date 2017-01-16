@@ -162,7 +162,7 @@ function reply(body, msg) {
 }
 
 function parseVerse(text) {
-  var verse = 'Lk+2:1;+4:4';
+  var verse = text;
   return verse;
 }
 
