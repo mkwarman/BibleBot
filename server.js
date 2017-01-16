@@ -124,13 +124,30 @@ slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
 
 // Send HTTP Request
 function sendRequest(callback) {
-  return http.get({
-    // http://labs.bible.org/api/?verse
+  var options = {
     host: 'labs.bible.org',
     path: '/api/?passage=John+3:16-17',
-  }, function(response){
-    console.log('response:', response);
-  })
+  }
+
+  var request = http.get(options, function(response){
+    console.log('STATUS: ' + response.statusCode);
+    console.log('HEADERS: ' + JSON.stringify(response.headers));
+
+    // Buffer the body entirely for processing as a whole.
+    var bodyStream = [];
+    response.on('data', function(chunk) {
+      // You can process streamed parts here...
+      bodyStream.push(chunk);
+    }).on('end', function() {
+      var body = Buffer.concat(bodyChunks);
+      console.log('BODY: ' + body);
+      // ...and/or process the entire body here.
+    })
+  });
+
+  request.on('error', function(e) {
+    console.log('error occurred in HTTP GET request: ', e.message);
+  });
 }
 
 // attach Slapp to express server
