@@ -145,7 +145,7 @@ function sendRequest(callback) {
       // Completely streamed body
       body = Buffer.concat(bodyStream);
       console.log('BODY: ' + body);
-      reply(body);
+      reply(body.stringify);
       return body
     })
   });
@@ -155,8 +155,8 @@ function sendRequest(callback) {
   });
 }
 
-function reply(msg) {
-  console.log('got msg:', msg);
+function reply(body) {
+  console.log('got body:', body);
 }
 
 // attach Slapp to express server
