@@ -105,7 +105,7 @@ slapp.message('attachment', ['mention', 'direct_message'], (msg) => {
 })
 
 // Testing
-slapp.command('bible', /.*/, (msg) => {
+slapp.command('/bible', /.*/, (msg) => {
   console.log('received bible command')
   msg.say('Received slash command for Bible')
 })
