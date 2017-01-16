@@ -111,6 +111,7 @@ slapp.command('/bible', /.*/, (msg, text) => {
   console.log('msg: ', msg)
   console.log('text: ', text)
   var verse = sendRequest()
+  console.log('got this from sendRequest():', verse)
   msg.say('Received slash command for Bible. Command entered:' + text)
   msg.say('Here\'s your verse!\n' + verse)
 })
@@ -151,6 +152,7 @@ function sendRequest(callback) {
     console.log('error occurred in HTTP GET request: ', e.message);
   });
 
+  console.log('body before return', body);
   return body;
 }
 
