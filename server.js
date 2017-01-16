@@ -110,7 +110,7 @@ slapp.command('/bible', /.*/, (msg, text) => {
   console.log('received bible command')
   console.log('msg: ', msg)
   console.log('text: ', text)
-  sendRequest()
+  var verse = sendRequest()
   msg.say('Received slash command for Bible. Command entered:' + text)
 })
 
@@ -123,7 +123,8 @@ slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
 })
 
 // Send HTTP Request
-function sendRequest(callback) {
+function sendRequest(callback): string {
+  var body;
   var options = {
     host: 'labs.bible.org',
     path: '/api/?passage=John+3:16-17',
@@ -139,7 +140,7 @@ function sendRequest(callback) {
       // You can process streamed parts here...
       bodyStream.push(chunk);
     }).on('end', function() {
-      var body = Buffer.concat(bodyStream);
+      body = Buffer.concat(bodyStream);
       console.log('BODY: ' + body);
       // ...and/or process the entire body here.
     })
@@ -148,6 +149,8 @@ function sendRequest(callback) {
   request.on('error', function(e) {
     console.log('error occurred in HTTP GET request: ', e.message);
   });
+
+  return body;
 }
 
 // attach Slapp to express server
