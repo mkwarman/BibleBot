@@ -125,7 +125,7 @@ function sendRequest(verse, msg) {
   var body;
   var options = {
     host: 'labs.bible.org',
-    path: '/api/?passage=' + verse + '&type=json&formatting=full',
+    path: '/api/?passage=' + verse + '&formatting=full',
   }
 
   var request = http.get(options, function(response){
@@ -153,14 +153,12 @@ function sendRequest(verse, msg) {
 }
 
 function reply(body, msg) {
-  var jsonBody = JSON.parse(body);
-  var verse = jsonBody.text.replace(/<\/?b>/g, '*')
-                           .replace(/<\/?i>/g, '_')
-  //                       .replace(/<p.{0,}?>/g, '\n')
-                           .replace(/<.+?>/g, '');
+  var verse = body.replace(/<\/?b>/g, '*')
+                  .replace(/<\/?i>/g, '_')
+                  .replace(/<p.{0,}?>/g, '\n')
+                  .replace(/<.+?>/g, '');
   console.log('got this from sendRequest():', verse);
-  msg.say('Here\'s your verse!\n' +
-          '*' + jsonBody.title + '*\n' + verse);
+  msg.say('Here\'s your verse!\n' + verse);
 }
 
 function parseVerse(text) {
