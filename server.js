@@ -161,7 +161,7 @@ function reply(body, msg) {
 }
 
 function parseVerse(text) {
-
+  var verse = 'John+3:16;'
   return verse
 }
 
