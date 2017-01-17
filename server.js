@@ -110,12 +110,15 @@ slapp.command('/bible', /.*/, (msg, text) => {
   console.log('Received slash command for Bible. Command entered: /bible ' + text);
   msg.say('Received slash command for Bible. Command entered: /bible ' + text);
 
-  var parsedVerse = parseVerse(text)
+  var parsedVerseData = parseVerseData(text)
+  var parsedText = parsedVerseData[0];
+  var parsedBooks = parsedVerseData[1];
+  var parsedVerses = parsedVerseData[2];
 
-  console.log('Interpreting requested verse as: ' + parsedVerse);
-  msg.say('Interpreting requested verse as: ' + parsedVerse);
+  console.log('Interpreting requested verse as: ' + parsedText);
+  msg.say('Interpreting requested verse as: ' + parsedText);
 
-  sendRequest(parsedVerse, msg);
+  sendRequest(parsedText, parsedBooks, parsedVerses, msg);
 })
 
 // Catch-all for any other responses not handled above
@@ -127,15 +130,15 @@ slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
 })
 
 // Send HTTP Request
-function sendRequest(verse, msg) {
+function sendRequest(parsedText, parsedBooks, parsedVerses, msg) {
   console.log('In sendRequest()...');
   var body;
   var options = {
     host: 'labs.bible.org',
-    path: '/api/?passage=' + verse + '&formatting=full',
+    path: '/api/?passage=' + parsedText + '&formatting=full',
   }
 
-  console.log('Request URL: labs.bible.org/api/?passage=' + verse + '&formatting=full');
+  console.log('Request URL: labs.bible.org/api/?passage=' + parsedText + '&formatting=full');
 
   var request = http.get(options, function(response){
     console.log('STATUS: ' + response.statusCode);
@@ -152,7 +155,7 @@ function sendRequest(verse, msg) {
       console.log('-----finished body-----');
       body = Buffer.concat(bodyStream).toString();
       console.log('BODY: ' + body);
-      reply(body, msg);
+      reply(body, parsedBooks, parsedVerses, msg);
     })
   });
 
@@ -161,7 +164,7 @@ function sendRequest(verse, msg) {
   });
 }
 
-function reply(body, msg) {
+function reply(body, parsedBooks, parsedVerses, msg) {
   console.log('In reply()...');
   var verse = body.replace(/<\/?b>/g, '*') // Fix bold formatting
                   .replace(/<\/?i>/g, '_') // Fix italics formatting
@@ -170,6 +173,11 @@ function reply(body, msg) {
                   .replace(/<\/h\d>/g, '*') // End bolding headings
                   .replace(/<p.{0,}?>/g, '\n>') // Fix newlines
                   .replace(/<.+?>/g, ''); // Remove all remaining HTML tags
+
+  for (i = 0, i < parsedVerses.length(), i++) {
+    verse = verse.replace(parsedVerses[i], parsedBooks[i] + ' ' + parsedVerses[i]);
+    console.log('Changing \"' + parsedVerses[i] + '\" to \"' + parsedBooks[i] + ' ' + parsedVerses[i] + '\"');
+  }
 
   while (verse.startsWith('\n>')) {
     console.log('Removing newline from beginning of: ' + verse);
@@ -188,7 +196,9 @@ function parseVerse(text) {
   var verseArray = verse.match(/\d+:\d+/g);
   console.log('Got books: ' + booksArray);
   console.log('Got verses: ' + verseArray);
-  return verse;
+
+  var data = [verse, booksArray, verseArray];
+  return data;
 }
 
 // attach Slapp to express server
