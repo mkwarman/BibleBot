@@ -135,8 +135,7 @@ slapp.message(/(?:[0-9]?[A-Za-z]{1,})+(?:[ +]\d+:\d+(?:-\d+)?)+/g, ['direct_ment
   console.log('Received text command for Bible. Text entered: ' + text);
   var regex = /(?:[0-9]?[A-Za-z]{1,})+(?:[ +]\d+:\d+(?:-\d+)?)+/g;
 
-  msg
-    .say('I saw the verse(s) ' + text.match(regex));
+  msg.say('I saw the verse(s) ' + text.match(regex));
 
   // var parsedVerseData = parseVerseData(text)
   // var parsedText = parsedVerseData[0];
