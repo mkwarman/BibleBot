@@ -107,9 +107,15 @@ slapp.message('attachment', ['mention', 'direct_message'], (msg) => {
 
 // Testing
 slapp.command('/bible', /.*/, (msg, text) => {
-  console.log('received bible command');
-  msg.say('Received slash command for Bible. Command entered:' + text);
-  sendRequest(parseVerse(text), msg);
+  console.log('Received slash command for Bible. Command entered: /bible ' + text);
+  msg.say('Received slash command for Bible. Command entered: /bible ' + text);
+
+  var parsedVerse = parseVerse(text)
+
+  console.log('Interpreting requested verse as: ' + parsedVerse);
+  msg.say('Interpreting requested verse as: ' + parsedVerse);
+
+  sendRequest(parsedVerse, msg);
 })
 
 // Catch-all for any other responses not handled above
@@ -122,6 +128,7 @@ slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
 
 // Send HTTP Request
 function sendRequest(verse, msg) {
+  console.log('In sendRequest()...');
   var body;
   var options = {
     host: 'labs.bible.org',
@@ -155,20 +162,22 @@ function sendRequest(verse, msg) {
 }
 
 function reply(body, msg) {
+  console.log('In reply()...');
   var verse = body.replace(/<\/?b>/g, '*') // Fix bold formatting
                   .replace(/<\/?i>/g, '_') // Fix italics formatting
                   .replace(/<p.{0,}?>/g, '\n>') // Fix newlines
                   .replace(/<.+?>/g, ''); // Remove all remaining HTML tags
 
   while (verse.startsWith('\n>')) {
-    verse = verse.replace(/^\\n>/, '') // Remove all leading newlines. We only want one
+    console.log('Removing newline from beginning');
+    verse = verse.replace(/^\\n>/, ''); // Remove all leading newlines.
   }
 
-  console.log('got this from sendRequest():', verse);
   msg.say('Here\'s your verse!\n>' + verse);
 }
 
 function parseVerse(text) {
+  console.log('In parseVerse()...');
   var verse = text.replace(' ', '+')
                   .replace(/([A-Za-z])(?=\d)/g, '$1+');
   return verse;
