@@ -165,6 +165,9 @@ function reply(body, msg) {
   console.log('In reply()...');
   var verse = body.replace(/<\/?b>/g, '*') // Fix bold formatting
                   .replace(/<\/?i>/g, '_') // Fix italics formatting
+                  .replace(/&/g, '&amp;') // Handle Slack escape characters
+                  .replace(/</g, '&lt;') // Handle Slack escape characters
+                  .replace(/>/g, '&gt;') // Handle Slack escape characters
                   .replace(/<p.{0,}?>/g, '\n>') // Fix newlines
                   .replace(/<.+?>/g, ''); // Remove all remaining HTML tags
 
