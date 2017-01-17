@@ -105,10 +105,9 @@ slapp.message('attachment', ['mention', 'direct_message'], (msg) => {
   })
 })
 
-// Testing
+// Bible command
 slapp.command('/bible', /.*/, (msg, text) => {
   console.log('Received slash command for Bible. Command entered: /bible ' + text);
-  msg.say('Received slash command for Bible. Command entered: /bible ' + text);
 
   var parsedVerseData = parseVerseData(text)
   var parsedText = parsedVerseData[0];
@@ -117,13 +116,37 @@ slapp.command('/bible', /.*/, (msg, text) => {
   var parsedMatchVerses = parsedVerseData[3];
 
   console.log('Interpreting requested verse as: ' + parsedText);
-  msg.say('Interpreting requested verse as: ' + parsedText);
+  msg.say('Give me just a sec while I grab that for you...');
 
   console.log('got parsedBooks as: ' + parsedBooks);
   console.log('got parsedFullVerses as: ' + parsedFullVerses);
   console.log('got parsedMatchVerses as: ' + parsedMatchVerses);
 
   sendRequest(parsedText, parsedBooks, parsedFullVerses, parsedMatchVerses, msg);
+})
+
+// Text bible command
+slapp.message(/(?:[0-9]?[A-Za-z]{1,})+(?:[ +]\d+:\d+(?:-\d+)?)+/g, ['direct_mention', 'direct_message'], (msg, text) => {
+  console.log('Received text command for Bible. Text entered: ' + text);
+  var regex = /(?:[0-9]?[A-Za-z]{1,})+(?:[ +]\d+:\d+(?:-\d+)?)+/g;
+
+  msg
+    .say('I saw the verse(s) ' + text.match);
+
+  // var parsedVerseData = parseVerseData(text)
+  // var parsedText = parsedVerseData[0];
+  // var parsedBooks = parsedVerseData[1];
+  // var parsedFullVerses = parsedVerseData[2];
+  // var parsedMatchVerses = parsedVerseData[3];
+  //
+  // console.log('Interpreting requested verse as: ' + parsedText);
+  // msg.say('Interpreting requested verse as: ' + parsedText);
+  //
+  // console.log('got parsedBooks as: ' + parsedBooks);
+  // console.log('got parsedFullVerses as: ' + parsedFullVerses);
+  // console.log('got parsedMatchVerses as: ' + parsedMatchVerses);
+  //
+  // sendRequest(parsedText, parsedBooks, parsedFullVerses, parsedMatchVerses, msg);
 })
 
 // Catch-all for any other responses not handled above
