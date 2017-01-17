@@ -193,9 +193,9 @@ function formatReply(body, parsedBooks, parsedFirstVerses, msg) {
                   .replace(/<h\d>/g, '\n\n>*') // Fix space before headings and start bolding
                   .replace(/<\/h\d>/g, '*') // End bolding headings
                   .replace(/<p.{0,}?>/g, '\n>') // Fix newlines
-                  .replace(/<.+?>/g, ''); // Remove all remaining HTML tags
+                  .replace(/<.+?>/g, '') // Remove all remaining HTML tags
                   .replace(/[^>](?=\*\d+:\d+)/, '\n>') // Move new sections of the same book to new lines
-                  .replace(/[\s>]+(?=\*)/, '') // Finally, remove all extra newlines at the beginning of the text
+                  .replace(/[\s>]+(?=\*)/, ''); // Finally, remove all extra newlines at the beginning of the text
 
   // Inject book titles
   for (let i of parsedFirstVerses) {
