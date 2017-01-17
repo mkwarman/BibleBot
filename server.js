@@ -142,7 +142,7 @@ function parseVerseData(text) {
   var firstVerseArray = verse.match(/(\d+:\d+)(-\d+)?((\+\d+:\d+(-\d+)?)+)?/g);
 
   console.log('Got books: ' + booksArray);
-  console.log('Got first verses: ' + verseArray);
+  console.log('Got first verses: ' + firstVerseArray);
 
   var data = [verse, booksArray, firstVerseArray];
   return data;
