@@ -146,7 +146,7 @@ function parseVerseData(text) {
   //   /[A-Za-z]+\+?(\d+:\d+)/g
   //   /(\d+:\d+)(-\d+)?((\+\d+:\d+(-\d+)?)+)?/g
   var firstVerseRegex = /[A-Za-z]+\+?(\d+:\d+)/g;
-  var firstVerseArray;
+  var firstVerseArray = [];
   var match;
   while (match = firstVerseRegex.exec(verse)) {
     firstVerseArray.push(match[1]);
