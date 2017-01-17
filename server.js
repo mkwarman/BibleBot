@@ -194,17 +194,18 @@ function formatThenReply(body, parsedBooks, parsedFirstVerses, msg) {
 
   console.log('got parsedBooks as: ' + parsedBooks);
   console.log('got parsedFirstVerses as: ' + parsedFirstVerses);
+  var verse = '';
 
   // Replace special characters
-  var verse = body.replace(/<\/?b>/g, '*') // Fix bold formatting
-                  .replace(/<\/?i>/g, '_') // Fix italics formatting
-                  .replace(/&#8211;/g, '-') // Handle unicode dash character
-                  .replace(/<h\d>/g, '\n\n>*') // Fix space before headings and start bolding
-                  .replace(/<\/h\d>/g, '*') // End bolding headings
-                  .replace(/<p.{0,}?>/g, '\n>') // Fix newlines
-                  .replace(/<.+?>/g, '') // Remove all remaining HTML tags
-                  .replace(/[^>](?=\*\d+:\d+)/, '\n>') // Move new sections of the same book to new lines
-                  .replace(/[\s>]+(?=\*)/, ''); // Finally, remove all extra newlines at the beginning of the text
+  verse = body.replace(/<\/?b>/g, '*') // Fix bold formatting
+              .replace(/<\/?i>/g, '_') // Fix italics formatting
+              .replace(/&#8211;/g, '-') // Handle unicode dash character
+              .replace(/<h\d>/g, '\n\n>*') // Fix space before headings and start bolding
+              .replace(/<\/h\d>/g, '*') // End bolding headings
+              .replace(/<p.{0,}?>/g, '\n>') // Fix newlines
+              .replace(/<.+?>/g, '') // Remove all remaining HTML tags
+              .replace(/[^>](?=\*\d+:\d+)/, '\n>') // Move new sections of the same book to new lines
+              .replace(/[\s>]+(?=\*)/, ''); // Finally, remove all extra newlines at the beginning of the text
 
   // Inject book titles
   for (var i = 0; i < parsedFirstVerses.length; i++) {
@@ -227,7 +228,7 @@ function formatThenReply(body, parsedBooks, parsedFirstVerses, msg) {
 }
 
 function reply(verse, msg) {
-  msg.say('Here\'s your verse, @' + msg.username + '!\n>' + verse);
+  msg.say('Here\'s your verse!\n>' + verse);
 }
 
 // attach Slapp to express server
