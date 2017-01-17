@@ -170,7 +170,7 @@ function parseVerseData(text) {
     } else {
       // If the book was changed
       booksArray.push(book); // Use the new book
-      lastbook = book; // Save the new book
+      lastBook = book; // Save the new book
     }
 
     // Save the verse
