@@ -158,8 +158,8 @@ slapp
     plural = (matches.length > 1);
 
     msg
-      .say('I found the verse' + (plural ? 's:' : ':') + promptList);
-      .say('Would you like me to show ' + (plural ? 'them?' : 'it?'));
+      .say('I found the verse' + (plural ? 's:' : ':') + promptList)
+      .say('Would you like me to show ' + (plural ? 'them?' : 'it?'))
       .route('show-or-not', state, plural);
 
     // var parsedVerseData = parseVerseData(text)
