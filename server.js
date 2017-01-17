@@ -131,7 +131,7 @@ slapp.message(/(?:[0-9]?[A-Za-z]{1,})+(?:[ +]\d+:\d+(?:-\d+)?)+/g, ['direct_ment
   var regex = /(?:[0-9]?[A-Za-z]{1,})+(?:[ +]\d+:\d+(?:-\d+)?)+/g;
 
   msg
-    .say('I saw the verse(s) ' + text.match);
+    .say('I saw the verse(s) ' + text.match(regex));
 
   // var parsedVerseData = parseVerseData(text)
   // var parsedText = parsedVerseData[0];
