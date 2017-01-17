@@ -155,11 +155,15 @@ function sendRequest(verse, msg) {
 }
 
 function reply(body, msg) {
-  var verse = body.replace(/<\/?b>/g, '*')
-                  .replace(/<\/?i>/g, '_')
-                  .replace(/^<p.{0,}?>/g, '')
-                  .replace(/<p.{0,}?>/g, '\n>')
-                  .replace(/<.+?>/g, '');
+  var verse = body.replace(/<\/?b>/g, '*') // Fix bold formatting
+                  .replace(/<\/?i>/g, '_') // Fix italics formatting
+                  .replace(/<p.{0,}?>/g, '\n>') // Fix newlines
+                  .replace(/<.+?>/g, ''); // Remove all remaining HTML tags
+
+  while verse.startsWith('\n>') {
+    verse = verse.replace(/^\\n>/, '') // Remove all leading newlines. We only want one
+  }
+
   console.log('got this from sendRequest():', verse);
   msg.say('Here\'s your verse!\n>' + verse);
 }
