@@ -207,7 +207,7 @@ function formatThenReply(body, parsedBooks, parsedFirstVerses, msg) {
                   .replace(/[\s>]+(?=\*)/, ''); // Finally, remove all extra newlines at the beginning of the text
 
   // Inject book titles
-  for (let i of parsedFirstVerses) {
+  for (var i = 0; i < parsedFirstVerses.length(); i++) {
     var replaceTarget = '>*' + parsedFirstVerses[i] + '*';
     var replacementString = '>*' + parsedBooks[i] + ' ' + parsedFirstVerses[i] + '*';
 
