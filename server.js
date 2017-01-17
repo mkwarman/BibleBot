@@ -34,6 +34,11 @@ slapp.message('help', ['mention', 'direct_message'], (msg) => {
   msg.say(HELP_TEXT)
 })
 
+// response to the user typing "test"
+slapp.message('test', ['mention', 'direct_message'], (msg) => {
+  msg.say('I\'m here!');
+})
+
 // "Conversation" flow that tracks state - kicks off when user says hi, hello or hey
 slapp
   .message('^(hi|hello|hey)$', ['direct_mention', 'direct_message'], (msg, text) => {
@@ -130,6 +135,7 @@ slapp.message(/(?:[0-9]?[A-Za-z]{1,})+(?:[ +]\d+:\d+(?:-\d+)?)+/g, ['direct_ment
   console.log('Received text command for Bible. Text entered: ' + text);
   var regex = /(?:[0-9]?[A-Za-z]{1,})+(?:[ +]\d+:\d+(?:-\d+)?)+/g;
   var matches = [];
+  var match;
 
   while (match = text.match(regex)) {
     console.log('got a match');
