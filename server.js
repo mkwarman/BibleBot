@@ -142,10 +142,13 @@ function parseVerseData(text) {
   var booksArray = verse.match(/[A-Za-z]+/g);
 
   // Get verses, but only the first verse for each book
-  var firstVerseArray = /[A-Za-z]+\+?(\d+:\d+)/g.exec(verse)[1];
+  var firstVerseRegex = /[A-Za-z]+\+?(\d+:\d+)/g
+  var match = firstVerseRegex.exec(verse);
   // These should return the same thing in capture group 1:
   // /[A-Za-z]+\+?(\d+:\d+)/g
   // /(\d+:\d+)(-\d+)?((\+\d+:\d+(-\d+)?)+)?/g
+
+  var firstVerseArray = match[1]
 
   console.log('Got books: ' + booksArray);
   console.log('Got first verses: ' + firstVerseArray);
