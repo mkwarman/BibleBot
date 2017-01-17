@@ -221,7 +221,8 @@ slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
 // Sanitize verses and get book and first verse data
 function parseVerseData(text) {
   console.log('In parseVerse()...');
-  var verse = text.replace(/\s/g, '+')
+  var verse = text.replace(/\n/g, ';')
+                  .replace(/\s/g, '+')
                   .replace(/([A-Za-z])(?=\d)/g, '$1+');
 
   // Get books
