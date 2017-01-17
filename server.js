@@ -160,7 +160,7 @@ slapp
     msg
       .say('I found the verse' + (plural ? 's:' : ':') + promptList)
       .say('Would you like me to show ' + (plural ? 'them?' : 'it?'))
-      .route('show-or-not', plural);
+      .route('show-or-not', matches, plural);
 
     // var parsedVerseData = parseVerseData(text)
     // var parsedText = parsedVerseData[0];
@@ -177,7 +177,7 @@ slapp
     //
     // sendRequest(parsedText, parsedBooks, parsedFullVerses, parsedMatchVerses, msg);
   })
-  .route('show-or-not', (msg, plural) => {
+  .route('show-or-not', (msg, matches, plural) => {
     var text = (msg.body.event && msg.body.event.text) || ''
 
     if (!text) {
@@ -190,6 +190,18 @@ slapp
     if (text.match(/yes/ig)) {
       return msg
         .say('Great! Give me just a sec while I grab that for you...');
+        var parsedVerseData = parseVerseData(parseVersesFromArray(matches))
+        var parsedText = parsedVerseData[0];
+        var parsedBooks = parsedVerseData[1];
+        var parsedFullVerses = parsedVerseData[2];
+        var parsedMatchVerses = parsedVerseData[3];
+
+        console.log('Interpreting requested verse as: ' + parsedText);
+        console.log('got parsedBooks as: ' + parsedBooks);
+        console.log('got parsedFullVerses as: ' + parsedFullVerses);
+        console.log('got parsedMatchVerses as: ' + parsedMatchVerses);
+
+        sendRequest(parsedText, parsedBooks, parsedFullVerses, parsedMatchVerses, msg);
     }
 
     if (text.match(/no/ig)) {
@@ -349,6 +361,19 @@ function formatThenReply(body, parsedBooks, parsedFullVerses, parsedMatchVerses,
 
 function reply(verse, msg) {
   msg.say('Here\'s your verse!\n' + verse);
+}
+
+function parseVersesFromArray(verseArray) {
+  var verseString = '';
+  for (var i = 0; i < verseArray.length; i++) {
+    if (i === verseArray.length - 1) {
+      verseString = verseString + verseArray[i];
+    } else {
+      verseString = verseString + verseArray[i] + '+';
+    }
+  }
+
+  return verseString;
 }
 
 // attach Slapp to express server
