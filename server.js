@@ -135,7 +135,7 @@ slapp
   .message(/.{0,}(?:[0-9]?[A-Za-z]{1,})+(?:[ +]?\d+:\d+(?:-\d+)?)+.{0,}/g,
           ['direct_mention', 'direct_message'], (msg, text) => {
     console.log('Received text command for Bible. Text entered: ' + text);
-    var regex = /(?:[0-9]?[A-Za-z]{1,})+(?:[ +]\d+:\d+(?:-\d+)?)+/g;
+    var regex = /(?:[0-9]? ?[A-Za-z]{1,})+(?:[ +]\d+(:\d+(?:-\d+)?)?)+/g;
     var matches = text.match(regex);
     var promptList = '';
     var reply = '';
@@ -328,8 +328,10 @@ function formatThenReply(body, parsedBooks, parsedFullVerses, parsedMatchVerses,
   verse = body.replace(/<\/?b>/g, '*') // Fix bold formatting
               .replace(/<\/?i>/g, '_') // Fix italics formatting
               .replace(/&#8211;/g, '-') // Handle unicode dash character
-              .replace(/(<h\d>.{0,}<\/h\d>)([^\*]{0,}\*[^:\*]{0,}:([^\*]{0,}){0,}\*[\S]{0,}\s)/g,
-                       '$2\n>*$1*\n>*$3* ') // Fix space before headings and bolding
+              .replace(/(<h\d>[^<>]{0,}<\/h\d>)([^\*]{0,}\*[^:\*]{0,}:([^\*]{0,}){0,}\*)/g,
+                       '$2\n>*$1*\n>*$3*') // Fix space before headings and bolding
+              .replace(/(<h\d>[^<>]{0,}<\/h\d>(?!\*))(?:[^\*]{0,}\*([^\*]{0,}){0,}\*)/g,
+                       '\n>*$1*\n>*$2*') // Fix space before headings and bolding
               .replace(/<p.{0,}?>/g, '\n>') // Fix newlines
               .replace(/<.+?>/g, '') // Remove all remaining HTML tags
               .replace(/[\s>]{0,}(\*\d+:(\d+)\*(?![^A-Za-z]+>))/g,
