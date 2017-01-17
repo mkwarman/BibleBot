@@ -213,7 +213,7 @@ function formatThenReply(body, parsedBooks, parsedFirstVerses, msg) {
               .replace(/<p.{0,}?>/g, '\n>') // Fix newlines
               .replace(/<.+?>/g, '') // Remove all remaining HTML tags
               .replace(/[^>](?=\*\d+:\d+)/g, '\n>') // Move new sections of the same book to new lines
-              .replace(/[\s>]+(?=\*)/, ''); // Finally, remove all extra newlines at the beginning of the text
+              .replace(/^[\s]+(?=>\*)/, ''); // Finally, remove all extra newlines at the beginning of the text
 
   // Inject book titles
   for (var i = 0; i < parsedFirstVerses.length; i++) {
@@ -236,7 +236,7 @@ function formatThenReply(body, parsedBooks, parsedFirstVerses, msg) {
 }
 
 function reply(verse, msg) {
-  msg.say('Here\'s your verse!\n>' + verse);
+  msg.say('Here\'s your verse!\n' + verse);
 }
 
 // attach Slapp to express server
