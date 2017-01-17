@@ -149,7 +149,6 @@ function parseVerseData(text) {
   var firstVerseArray;
   var match;
   while (match = firstVerseRegex.exec(verse)) {
-    console.log('got first verse: ' + match[1]);
     firstVerseArray.push(match[1]);
   }
 
