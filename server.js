@@ -160,7 +160,7 @@ function reply(body, msg) {
                   .replace(/<p.{0,}?>/g, '\n>') // Fix newlines
                   .replace(/<.+?>/g, ''); // Remove all remaining HTML tags
 
-  while verse.startsWith('\n>') {
+  while (verse.startsWith('\n>')) {
     verse = verse.replace(/^\\n>/, '') // Remove all leading newlines. We only want one
   }
 
