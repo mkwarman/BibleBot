@@ -131,27 +131,72 @@ slapp.command('/bible', /.*/, (msg, text) => {
 })
 
 // Text bible command
-slapp.message(/.{0,}(?:[0-9]?[A-Za-z]{1,})+(?:[ +]?\d+:\d+(?:-\d+)?)+.{0,}/g, ['direct_mention', 'direct_message'], (msg, text) => {
-  console.log('Received text command for Bible. Text entered: ' + text);
-  var regex = /(?:[0-9]?[A-Za-z]{1,})+(?:[ +]\d+:\d+(?:-\d+)?)+/g;
+slapp
+  .message(/.{0,}(?:[0-9]?[A-Za-z]{1,})+(?:[ +]?\d+:\d+(?:-\d+)?)+.{0,}/g,
+          ['direct_mention', 'direct_message'], (msg, text) => {
+    console.log('Received text command for Bible. Text entered: ' + text);
+    var regex = /(?:[0-9]?[A-Za-z]{1,})+(?:[ +]\d+:\d+(?:-\d+)?)+/g;
+    var matches = text.match(regex);
+    var promptList = '';
+    var reply = '';
+    var plural = false;
 
-  msg.say('I saw the verse(s) ' + text.match(regex));
+    if (matches.length === 1) {
+      promptList = matches[0];
+    } else if (metches.length === 2) {
+      promptList = matches[0] + ' and ' + matches[1];
+    } else if (matches.length > 2) {
+      for (var i = 0; i < matches.length; i++) {
+        if (i === matches.length - 1) {
+          promptList = promptList + ' and ' + matches[i];
+        } else {
+          promptList = promptList + ' ' + matches[i] + ',';
+        }
+      }
+    }
 
-  // var parsedVerseData = parseVerseData(text)
-  // var parsedText = parsedVerseData[0];
-  // var parsedBooks = parsedVerseData[1];
-  // var parsedFullVerses = parsedVerseData[2];
-  // var parsedMatchVerses = parsedVerseData[3];
-  //
-  // console.log('Interpreting requested verse as: ' + parsedText);
-  // msg.say('Interpreting requested verse as: ' + parsedText);
-  //
-  // console.log('got parsedBooks as: ' + parsedBooks);
-  // console.log('got parsedFullVerses as: ' + parsedFullVerses);
-  // console.log('got parsedMatchVerses as: ' + parsedMatchVerses);
-  //
-  // sendRequest(parsedText, parsedBooks, parsedFullVerses, parsedMatchVerses, msg);
-})
+    plural = (matches.length > 1);
+
+    msg
+      .say('I found the verse' + (plural ? 's:' : ':') + promptList);
+      .say('Would you like me to show ' + (plural ? 'them?' : 'it?'));
+      .route('show-or-not', state, plural);
+
+    // var parsedVerseData = parseVerseData(text)
+    // var parsedText = parsedVerseData[0];
+    // var parsedBooks = parsedVerseData[1];
+    // var parsedFullVerses = parsedVerseData[2];
+    // var parsedMatchVerses = parsedVerseData[3];
+    //
+    // console.log('Interpreting requested verse as: ' + parsedText);
+    // msg.say('Interpreting requested verse as: ' + parsedText);
+    //
+    // console.log('got parsedBooks as: ' + parsedBooks);
+    // console.log('got parsedFullVerses as: ' + parsedFullVerses);
+    // console.log('got parsedMatchVerses as: ' + parsedMatchVerses);
+    //
+    // sendRequest(parsedText, parsedBooks, parsedFullVerses, parsedMatchVerses, msg);
+  })
+  .route('show-or-not', (msg, state, plural) => {
+    var text = (msg.body.event && msg.body.event.text) || ''
+
+    if (!text) {
+      return msg
+        .say('Sorry, I didn\'t understand that.')
+        .say('Would you like me to show the verse' + (plural ? 's?' : '?'))
+        .route('show-or-not', state);
+    }
+
+    if (text.match(/yes/ig)) {
+      return msg
+        .say('Great! Give me just a sec while I grab that for you...');
+    }
+
+    if (text.match(/no/ig)) {
+      return msg
+        .say('Ok.');
+    }
+  })
 
 // Catch-all for any other responses not handled above
 slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
