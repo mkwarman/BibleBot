@@ -206,11 +206,21 @@ function formatThenReply(body, parsedBooks, parsedFirstVerses, msg) {
 
   console.log('Before sanitization:\n' + body);
   // Replace special characters
+  // verse = body.replace(/<\/?b>/g, '*') // Fix bold formatting
+  //             .replace(/<\/?i>/g, '_') // Fix italics formatting
+  //             .replace(/&#8211;/g, '-') // Handle unicode dash character
+  //             .replace(/<h\d>/g, '\n\n>*') // Fix space before headings and start bolding
+  //             .replace(/<\/h\d>/g, '*') // End bolding headings
+  //             .replace(/<p.{0,}?>/g, '\n>') // Fix newlines
+  //             .replace(/<.+?>/g, '') // Remove all remaining HTML tags
+  //             .replace(/[\s>]{0,}(\*\d+:\d+\*)/g, '\n>$1') // Move new sections of the same book to new lines
+  //             .replace(/^[\s]{0,}(?=>\*)/, ''); // Finally, remove all extra newlines at the beginning of the text
+
   verse = body.replace(/<\/?b>/g, '*') // Fix bold formatting
               .replace(/<\/?i>/g, '_') // Fix italics formatting
               .replace(/&#8211;/g, '-') // Handle unicode dash character
-              .replace(/<h\d>/g, '\n\n>*') // Fix space before headings and start bolding
-              .replace(/<\/h\d>/g, '*') // End bolding headings
+              .replace(/(<h\d>.{0,}<\/h\d>)([^\*]{0,}\*[^\*]{0,}\*[\S]{0,}\s)/g,
+                       '$2\n>*$1*\n>') // Fix space before headings and start bolding
               .replace(/<p.{0,}?>/g, '\n>') // Fix newlines
               .replace(/<.+?>/g, '') // Remove all remaining HTML tags
               .replace(/[\s>]{0,}(\*\d+:\d+\*)/g, '\n>$1') // Move new sections of the same book to new lines
