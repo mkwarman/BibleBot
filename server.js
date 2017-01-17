@@ -244,11 +244,11 @@ function formatThenReply(body, parsedBooks, parsedFullVerses, parsedMatchVerses,
               .replace(/<\/?i>/g, '_') // Fix italics formatting
               .replace(/&#8211;/g, '-') // Handle unicode dash character
               .replace(/(<h\d>.{0,}<\/h\d>)([^\*]{0,}\*[^:\*]{0,}:([^\*]{0,}){0,}\*[\S]{0,}\s)/g,
-                       '$2\n>*$1*\n>*$3*') // Fix space before headings and start bolding
+                       '$2\n>*$1*\n>*$3*') // Fix space before headings and bolding
               .replace(/<p.{0,}?>/g, '\n>') // Fix newlines
               .replace(/<.+?>/g, '') // Remove all remaining HTML tags
               .replace(/[\s>]{0,}(\*\d+:(\d+)\*(?![^A-Za-z]+>))/g,
-                       '\n>$1\n>*$2*') // Move new sections of the same book to new lines and copy verse number
+                       '\n>$1\n>*$2* ') // Move new sections of the same book to new lines and copy verse number
               .replace(/^[\s]{0,}(?=>\*)/, ''); // Finally, remove all extra newlines at the beginning of the text
 
   console.log('After sanitization:\n' + verse);
