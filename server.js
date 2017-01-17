@@ -204,6 +204,7 @@ function formatThenReply(body, parsedBooks, parsedFirstVerses, msg) {
   console.log('got parsedFirstVerses as: ' + parsedFirstVerses);
   var verse = '';
 
+  console.log('Before sanitization:\n' + verse);
   // Replace special characters
   verse = body.replace(/<\/?b>/g, '*') // Fix bold formatting
               .replace(/<\/?i>/g, '_') // Fix italics formatting
@@ -215,6 +216,8 @@ function formatThenReply(body, parsedBooks, parsedFirstVerses, msg) {
               .replace(/[^>](?=\*\d+:\d+)/g, '\n>') // Move new sections of the same book to new lines
               .replace(/^[\s]+(?=>\*)/, ''); // Finally, remove all extra newlines at the beginning of the text
 
+  console.log('After sanitization:\n' + verse);
+
   // Inject book titles
   for (var i = 0; i < parsedFirstVerses.length; i++) {
     var replaceTarget = '>*' + parsedFirstVerses[i] + '*';
@@ -224,6 +227,8 @@ function formatThenReply(body, parsedBooks, parsedFirstVerses, msg) {
 
     console.log('Changing \"' + replaceTarget + '\" to \"' + replacementString + '\"');
   }
+
+  console.log('After title injection:\n' + verse);
 
   // // Move extra newlines at the beginning of the formatted verse text
   // while (verse.startsWith('\n>')) {
