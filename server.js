@@ -188,8 +188,8 @@ slapp
     }
 
     if (text.match(/yes/ig)) {
-      return msg
-        .say('Great! Give me just a sec while I grab that for you...');
+      msg
+        .say('Great! Give me just a sec while I grab that for you...')
         var parsedVerseData = parseVerseData(parseVersesFromArray(matches))
         var parsedText = parsedVerseData[0];
         var parsedBooks = parsedVerseData[1];
