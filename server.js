@@ -212,7 +212,7 @@ function formatThenReply(body, parsedBooks, parsedFirstVerses, msg) {
               .replace(/<\/h\d>/g, '*') // End bolding headings
               .replace(/<p.{0,}?>/g, '\n>') // Fix newlines
               .replace(/<.+?>/g, '') // Remove all remaining HTML tags
-              .replace(/[^>](?=\*\d+:\d+)/, '\n>') // Move new sections of the same book to new lines
+              .replace(/[^>](?=\*\d+:\d+)/g, '\n>') // Move new sections of the same book to new lines
               .replace(/[\s>]+(?=\*)/, ''); // Finally, remove all extra newlines at the beginning of the text
 
   // Inject book titles
