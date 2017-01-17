@@ -217,7 +217,7 @@ function formatReply(body, parsedBooks, parsedFirstVerses, msg) {
   reply(verse, msg);
 }
 
-function reply(verse) {
+function reply(verse, msg) {
   msg.say('Here\'s your verse!\n>' + verse);
 }
 
