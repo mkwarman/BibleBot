@@ -188,7 +188,7 @@ function reply(body, parsedBooks, parsedVerses, msg) {
   msg.say('Here\'s your verse!\n>' + verse);
 }
 
-function parseVerse(text) {
+function parseVerseData(text) {
   console.log('In parseVerse()...');
   var verse = text.replace(/\s/g, '+')
                   .replace(/([A-Za-z])(?=\d)/g, '$1+');
