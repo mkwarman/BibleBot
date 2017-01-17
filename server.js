@@ -113,15 +113,15 @@ slapp.command('/bible', /.*/, (msg, text) => {
   var parsedVerseData = parseVerseData(text)
   var parsedText = parsedVerseData[0];
   var parsedBooks = parsedVerseData[1];
-  var parsedFirstVerses = parsedVerseData[2];
+  var parsedVerses = parsedVerseData[2];
 
   console.log('Interpreting requested verse as: ' + parsedText);
   msg.say('Interpreting requested verse as: ' + parsedText);
 
   console.log('got parsedBooks as: ' + parsedBooks);
-  console.log('got parsedFirstVerses as: ' + parsedFirstVerses);
+  console.log('got parsedVerses as: ' + parsedVerses);
 
-  sendRequest(parsedText, parsedBooks, parsedFirstVerses, msg);
+  sendRequest(parsedText, parsedBooks, parsedVerses, msg);
 })
 
 // Catch-all for any other responses not handled above
@@ -139,28 +139,53 @@ function parseVerseData(text) {
                   .replace(/([A-Za-z])(?=\d)/g, '$1+');
 
   // Get books
-  var booksArray = verse.match(/[A-Za-z]+/g);
+  // var booksArray = verse.match(/[A-Za-z]+/g);
 
   // Get verses, but only the first verse for each book.
   //   These should return the same thing in capture group 1:
   //   /[A-Za-z]+\+?(\d+:\d+)/g
   //   /(\d+:\d+)(-\d+)?((\+\d+:\d+(-\d+)?)+)?/g
-  var firstVerseRegex = /[A-Za-z]+\+?(\d+:\d+)/g;
-  var firstVerseArray = [];
+  // var firstVerseRegex = /[A-Za-z]+\+?(\d+:\d+)/g;
+  // var firstVerseArray = [];
+  // var match;
+  // while (match = firstVerseRegex.exec(verse)) {
+  //   firstVerseArray.push(match[1]);
+  // }
+
+  // ([0-9]?[A-Za-z]{1,}|[A-Za-z]{0,})\+([0-9]+:[0-9]+)
+  var regex = /([0-9]?[A-Za-z]{1,}|[A-Za-z]{0,})\+([0-9]+:[0-9]+)/g;
+  var booksArray = [];
+  var verseArray = [];
+  var lastBook;
   var match;
-  while (match = firstVerseRegex.exec(verse)) {
-    firstVerseArray.push(match[1]);
+
+  // For all results of the regex execution
+  while (match = regex.exec(verse)) {
+    var book = match[1];
+
+    // See if there is a new book for the current verse
+    if (book === null) {
+      // If the book was not changed
+      booksArray.push(lastBook); // uUse the last book
+    } else {
+      // If the book was changed
+      booksArray.push(book); // Use the new book
+      lastbook = book; // Save the new book
+    }
+
+    // Save the verse
+    verseArray.push(match[2]);
   }
 
   console.log('Got books: ' + booksArray);
-  console.log('Got first verses: ' + firstVerseArray);
+  console.log('Got first verses: ' + verseArray);
 
-  var data = [verse, booksArray, firstVerseArray];
+  var data = [verse, booksArray, verseArray];
   return data;
 }
 
 // Send HTTP Request
-function sendRequest(parsedText, parsedBooks, parsedFirstVerses, msg) {
+function sendRequest(parsedText, parsedBooks, parsedVerses, msg) {
   console.log('In sendRequest()...');
   var body;
   var options = {
@@ -169,7 +194,7 @@ function sendRequest(parsedText, parsedBooks, parsedFirstVerses, msg) {
   }
 
   console.log('got parsedBooks as: ' + parsedBooks);
-  console.log('got parsedFirstVerses as: ' + parsedFirstVerses);
+  console.log('got parsedVerses as: ' + parsedVerses);
 
   console.log('Request URL: labs.bible.org/api/?passage=' + parsedText + '&formatting=full');
 
@@ -188,7 +213,7 @@ function sendRequest(parsedText, parsedBooks, parsedFirstVerses, msg) {
       console.log('-----finished body-----');
       body = Buffer.concat(bodyStream).toString();
       console.log('BODY: ' + body);
-      formatThenReply(body, parsedBooks, parsedFirstVerses, msg);
+      formatThenReply(body, parsedBooks, parsedVerses, msg);
     })
   });
 
@@ -197,11 +222,11 @@ function sendRequest(parsedText, parsedBooks, parsedFirstVerses, msg) {
   });
 }
 
-function formatThenReply(body, parsedBooks, parsedFirstVerses, msg) {
+function formatThenReply(body, parsedBooks, parsedVerses, msg) {
   console.log('In formatThenReply()...');
 
   console.log('got parsedBooks as: ' + parsedBooks);
-  console.log('got parsedFirstVerses as: ' + parsedFirstVerses);
+  console.log('got parsedVerses as: ' + parsedVerses);
   var verse = '';
 
   console.log('Before sanitization:\n' + body);
@@ -229,9 +254,9 @@ function formatThenReply(body, parsedBooks, parsedFirstVerses, msg) {
   console.log('After sanitization:\n' + verse);
 
   // Inject book titles
-  for (var i = 0; i < parsedFirstVerses.length; i++) {
-    var replaceTarget = '>*' + parsedFirstVerses[i] + '*';
-    var replacementString = '\n>*' + parsedBooks[i] + ' ' + parsedFirstVerses[i] + '*';
+  for (var i = 0; i < parsedVerses.length; i++) {
+    var replaceTarget = '>*' + parsedVerses[i] + '*';
+    var replacementString = '\n>*' + parsedBooks[i] + ' ' + parsedVerses[i] + '*';
 
     verse = verse.replace(replaceTarget, replacementString);
 
