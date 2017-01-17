@@ -169,7 +169,8 @@ function reply(body, msg) {
 }
 
 function parseVerse(text) {
-  var verse = text.replace(' ', '+');
+  var verse = text.replace(' ', '+')
+                  .replace(/([A-Za-z])(?=\d)/g, '$1+');
   return verse;
 }
 
