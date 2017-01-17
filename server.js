@@ -142,7 +142,7 @@ slapp
     var plural = false;
 
     if (matches.length === 1) {
-      promptList = matches[0];
+      promptList = ' ' + matches[0];
     } else if (metches.length === 2) {
       promptList = matches[0] + ' and ' + matches[1];
     } else if (matches.length > 2) {
