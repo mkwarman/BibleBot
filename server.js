@@ -174,7 +174,7 @@ function reply(body, parsedBooks, parsedVerses, msg) {
                   .replace(/<p.{0,}?>/g, '\n>') // Fix newlines
                   .replace(/<.+?>/g, ''); // Remove all remaining HTML tags
 
-  for (i = 0, i < parsedVerses.length(), i++) {
+  for (i = 0; i < parsedVerses.length(); i++) {
     verse = verse.replace(parsedVerses[i], parsedBooks[i] + ' ' + parsedVerses[i]);
     console.log('Changing \"' + parsedVerses[i] + '\" to \"' + parsedBooks[i] + ' ' + parsedVerses[i] + '\"');
   }
