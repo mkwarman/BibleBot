@@ -166,6 +166,8 @@ function reply(body, msg) {
   var verse = body.replace(/<\/?b>/g, '*') // Fix bold formatting
                   .replace(/<\/?i>/g, '_') // Fix italics formatting
                   .replace(/&#8211;/g, '-') // Handle unicode dash character
+                  .replace(/<h\d>/g, '\n\n>*') // Fix space before headings and start bolding
+                  .replace(/<\/h\d>/g, '*') // End bolding headings
                   .replace(/<p.{0,}?>/g, '\n>') // Fix newlines
                   .replace(/<.+?>/g, ''); // Remove all remaining HTML tags
 
