@@ -202,9 +202,9 @@ function formatThenReply(body, parsedBooks, parsedFirstVerses, msg) {
     var replaceTarget = '>*' + parsedFirstVerses[i] + '*';
     var replacementString = '>*' + parsedBooks[i] + ' ' + parsedFirstVerses[i] + '*';
 
-    verse = verse.replace(replaceTarget, replacementString);
+    verse = verse.replace(replaceTarget[i], replacementString[i]);
 
-    console.log('Changing \"' + replaceTarget + '\" to \"' + replacementString + '\"');
+    console.log('Changing \"' + replaceTarget[i] + '\" to \"' + replacementString[i] + '\"');
   }
 
   // // Move extra newlines at the beginning of the formatted verse text
