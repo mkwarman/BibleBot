@@ -118,6 +118,9 @@ slapp.command('/bible', /.*/, (msg, text) => {
   console.log('Interpreting requested verse as: ' + parsedText);
   msg.say('Interpreting requested verse as: ' + parsedText);
 
+  console.log('got parsedBooks as: ' + parsedBooks);
+  console.log('got parsedFirstVerses as: ' + parsedFirstVerses);
+
   sendRequest(parsedText, parsedBooks, parsedFirstVerses, msg);
 })
 
@@ -157,6 +160,9 @@ function sendRequest(parsedText, parsedBooks, parsedFirstVerses, msg) {
     path: '/api/?passage=' + parsedText + '&formatting=full',
   }
 
+  console.log('got parsedBooks as: ' + parsedBooks);
+  console.log('got parsedFirstVerses as: ' + parsedFirstVerses);
+
   console.log('Request URL: labs.bible.org/api/?passage=' + parsedText + '&formatting=full');
 
   var request = http.get(options, function(response){
@@ -184,7 +190,10 @@ function sendRequest(parsedText, parsedBooks, parsedFirstVerses, msg) {
 }
 
 function formatThenReply(body, parsedBooks, parsedFirstVerses, msg) {
-  console.log('In reply()...');
+  console.log('In formatThenReply()...');
+
+  console.log('got parsedBooks as: ' + parsedBooks);
+  console.log('got parsedFirstVerses as: ' + parsedFirstVerses);
 
   // Replace special characters
   var verse = body.replace(/<\/?b>/g, '*') // Fix bold formatting
@@ -202,9 +211,9 @@ function formatThenReply(body, parsedBooks, parsedFirstVerses, msg) {
     var replaceTarget = '>*' + parsedFirstVerses[i] + '*';
     var replacementString = '>*' + parsedBooks[i] + ' ' + parsedFirstVerses[i] + '*';
 
-    verse = verse.replace(replaceTarget[i], replacementString[i]);
+    verse = verse.replace(replaceTarget, replacementString);
 
-    console.log('Changing \"' + replaceTarget[i] + '\" to \"' + replacementString[i] + '\"');
+    console.log('Changing \"' + replaceTarget + '\" to \"' + replacementString + '\"');
   }
 
   // // Move extra newlines at the beginning of the formatted verse text
@@ -218,7 +227,7 @@ function formatThenReply(body, parsedBooks, parsedFirstVerses, msg) {
 }
 
 function reply(verse, msg) {
-  msg.say('Here\'s your verse!\n>' + verse);
+  msg.say('Here\'s your verse, @' + msg.username + '!\n>' + verse);
 }
 
 // attach Slapp to express server
