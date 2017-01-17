@@ -213,15 +213,15 @@ function formatThenReply(body, parsedBooks, parsedFirstVerses, msg) {
               .replace(/<\/h\d>/g, '*') // End bolding headings
               .replace(/<p.{0,}?>/g, '\n>') // Fix newlines
               .replace(/<.+?>/g, '') // Remove all remaining HTML tags
-              .replace(/[^>](?=\*\d+:\d+)/g, '\n>') // Move new sections of the same book to new lines
-              .replace(/^[\s]+(?=>\*)/, ''); // Finally, remove all extra newlines at the beginning of the text
+              .replace(/[\s>]{0,}(\*\d+:\d+\*)/g, '\n>$1') // Move new sections of the same book to new lines
+              .replace(/^[\s]{0,}(?=>\*)/, ''); // Finally, remove all extra newlines at the beginning of the text
 
   console.log('After sanitization:\n' + verse);
 
   // Inject book titles
   for (var i = 0; i < parsedFirstVerses.length; i++) {
     var replaceTarget = '>*' + parsedFirstVerses[i] + '*';
-    var replacementString = '>*' + parsedBooks[i] + ' ' + parsedFirstVerses[i] + '*';
+    var replacementString = '\n>*' + parsedBooks[i] + ' ' + parsedFirstVerses[i] + '*';
 
     verse = verse.replace(replaceTarget, replacementString);
 
