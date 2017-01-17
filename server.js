@@ -174,7 +174,7 @@ function sendRequest(parsedText, parsedBooks, parsedFirstVerses, msg) {
       console.log('-----finished body-----');
       body = Buffer.concat(bodyStream).toString();
       console.log('BODY: ' + body);
-      reply(body, parsedBooks, parsedFirstVerses, msg);
+      formatThenReply(body, parsedBooks, parsedFirstVerses, msg);
     })
   });
 
@@ -183,7 +183,7 @@ function sendRequest(parsedText, parsedBooks, parsedFirstVerses, msg) {
   });
 }
 
-function formatReply(body, parsedBooks, parsedFirstVerses, msg) {
+function formatThenReply(body, parsedBooks, parsedFirstVerses, msg) {
   console.log('In reply()...');
 
   // Replace special characters
