@@ -180,7 +180,7 @@ slapp
   .route('show-or-not', (msg, matches, plural) => {
     var text = (msg.body.event && msg.body.event.text) || ''
 
-    if (!text) {
+    if (!text.match(/yes|no/ig)) {
       return msg
         .say('Sorry, I didn\'t understand that.')
         .say('Would you like me to show the verse' + (plural ? 's?' : '?'))
