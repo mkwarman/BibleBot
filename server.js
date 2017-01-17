@@ -113,12 +113,12 @@ slapp.command('/bible', /.*/, (msg, text) => {
   var parsedVerseData = parseVerseData(text)
   var parsedText = parsedVerseData[0];
   var parsedBooks = parsedVerseData[1];
-  var parsedVerses = parsedVerseData[2];
+  var parsedFirstVerses = parsedVerseData[2];
 
   console.log('Interpreting requested verse as: ' + parsedText);
   msg.say('Interpreting requested verse as: ' + parsedText);
 
-  sendRequest(parsedText, parsedBooks, parsedVerses, msg);
+  sendRequest(parsedText, parsedBooks, parsedFirstVerses, msg);
 })
 
 // Catch-all for any other responses not handled above
@@ -129,8 +129,27 @@ slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
   }
 })
 
+// Sanitize verses and get book and first verse data
+function parseVerseData(text) {
+  console.log('In parseVerse()...');
+  var verse = text.replace(/\s/g, '+')
+                  .replace(/([A-Za-z])(?=\d)/g, '$1+');
+
+  // Get books
+  var booksArray = verse.match(/[A-Za-z]+/g);
+
+  // Get verses, but only the first verse for each book
+  var firstVerseArray = verse.match(/(\d+:\d+)(-\d+)?((\+\d+:\d+(-\d+)?)+)?/g);
+
+  console.log('Got books: ' + booksArray);
+  console.log('Got first verses: ' + verseArray);
+
+  var data = [verse, booksArray, firstVerseArray];
+  return data;
+}
+
 // Send HTTP Request
-function sendRequest(parsedText, parsedBooks, parsedVerses, msg) {
+function sendRequest(parsedText, parsedBooks, parsedFirstVerses, msg) {
   console.log('In sendRequest()...');
   var body;
   var options = {
@@ -155,7 +174,7 @@ function sendRequest(parsedText, parsedBooks, parsedVerses, msg) {
       console.log('-----finished body-----');
       body = Buffer.concat(bodyStream).toString();
       console.log('BODY: ' + body);
-      reply(body, parsedBooks, parsedVerses, msg);
+      reply(body, parsedBooks, parsedFirstVerses, msg);
     })
   });
 
@@ -164,8 +183,10 @@ function sendRequest(parsedText, parsedBooks, parsedVerses, msg) {
   });
 }
 
-function reply(body, parsedBooks, parsedVerses, msg) {
+function formatReply(body, parsedBooks, parsedFirstVerses, msg) {
   console.log('In reply()...');
+
+  // Replace special characters
   var verse = body.replace(/<\/?b>/g, '*') // Fix bold formatting
                   .replace(/<\/?i>/g, '_') // Fix italics formatting
                   .replace(/&#8211;/g, '-') // Handle unicode dash character
@@ -173,32 +194,31 @@ function reply(body, parsedBooks, parsedVerses, msg) {
                   .replace(/<\/h\d>/g, '*') // End bolding headings
                   .replace(/<p.{0,}?>/g, '\n>') // Fix newlines
                   .replace(/<.+?>/g, ''); // Remove all remaining HTML tags
+                  .replace(/[^>](?=\*\d+:\d+)/, '\n>') // Move new sections of the same book to new lines
+                  .replace(/[\s>]+(?=\*)/, '') // Finally, remove all extra newlines at the beginning of the text
 
-  for (i = 0; i < parsedVerses.length(); i++) {
-    verse = verse.replace(parsedVerses[i], parsedBooks[i] + ' ' + parsedVerses[i]);
-    console.log('Changing \"' + parsedVerses[i] + '\" to \"' + parsedBooks[i] + ' ' + parsedVerses[i] + '\"');
+  // Inject book titles
+  for (let i of parsedFirstVerses) {
+    var replaceTarget = '>*' + parsedFirstVerses[i] + '*';
+    var replacementString = '>*' + parsedBooks[i] + ' ' + parsedFirstVerses[i] + '*';
+
+    verse = verse.replace(replaceTarget, replacementString);
+
+    console.log('Changing \"' + replaceTarget + '\" to \"' + replacementString + '\"');
   }
 
-  while (verse.startsWith('\n>')) {
-    console.log('Removing newline from beginning of: ' + verse);
-    verse = verse.replace('\n>', ''); // Remove all leading newlines.
-    console.log('New value: ' + verse);
-  }
+  // // Move extra newlines at the beginning of the formatted verse text
+  // while (verse.startsWith('\n>')) {
+  //   console.log('Removing newline from beginning of the verse');
+  //   verse = verse.replace('\n>', ''); // Remove all leading newlines.
+  // }
 
-  msg.say('Here\'s your verse!\n>' + verse);
+  // Reply with the formatted verse
+  reply(verse, msg);
 }
 
-function parseVerseData(text) {
-  console.log('In parseVerse()...');
-  var verse = text.replace(/\s/g, '+')
-                  .replace(/([A-Za-z])(?=\d)/g, '$1+');
-  var booksArray = verse.match(/[A-Za-z]+/g);
-  var verseArray = verse.match(/\d+:\d+/g);
-  console.log('Got books: ' + booksArray);
-  console.log('Got verses: ' + verseArray);
-
-  var data = [verse, booksArray, verseArray];
-  return data;
+function reply(verse) {
+  msg.say('Here\'s your verse!\n>' + verse);
 }
 
 // attach Slapp to express server
