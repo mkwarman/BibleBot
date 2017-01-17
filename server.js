@@ -160,7 +160,7 @@ slapp
     msg
       .say('I found the verse' + (plural ? 's:' : ':') + promptList)
       .say('Would you like me to show ' + (plural ? 'them?' : 'it?'))
-      .route('show-or-not', state, plural);
+      .route('show-or-not', plural);
 
     // var parsedVerseData = parseVerseData(text)
     // var parsedText = parsedVerseData[0];
@@ -177,14 +177,14 @@ slapp
     //
     // sendRequest(parsedText, parsedBooks, parsedFullVerses, parsedMatchVerses, msg);
   })
-  .route('show-or-not', (msg, state, plural) => {
+  .route('show-or-not', (msg, plural) => {
     var text = (msg.body.event && msg.body.event.text) || ''
 
     if (!text) {
       return msg
         .say('Sorry, I didn\'t understand that.')
         .say('Would you like me to show the verse' + (plural ? 's?' : '?'))
-        .route('show-or-not', state);
+        .route('show-or-not');
     }
 
     if (text.match(/yes/ig)) {
