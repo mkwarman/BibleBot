@@ -184,6 +184,10 @@ function parseVerse(text) {
   console.log('In parseVerse()...');
   var verse = text.replace(/\s/g, '+')
                   .replace(/([A-Za-z])(?=\d)/g, '$1+');
+  var booksArray = verse.match(/[A-Za-z]+/g);
+  var verseArray = verse.match(/\d+:\d+/g);
+  console.log('Got books: ' + booksArray);
+  console.log('Got verses: ' + verseArray);
   return verse;
 }
 
