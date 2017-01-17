@@ -169,8 +169,9 @@ function reply(body, msg) {
                   .replace(/<.+?>/g, ''); // Remove all remaining HTML tags
 
   while (verse.startsWith('\n>')) {
-    console.log('Removing newline from beginning');
-    verse = verse.replace(/\\n>/, ''); // Remove all leading newlines.
+    console.log('Removing newline from beginning of: ' + verse);
+    verse = verse.replace('\n>', ''); // Remove all leading newlines.
+    console.log('New value: ' + verse);
   }
 
   msg.say('Here\'s your verse!\n>' + verse);
