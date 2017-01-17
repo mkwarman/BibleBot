@@ -131,11 +131,11 @@ slapp.command('/bible', /.*/, (msg, text) => {
 })
 
 // Text bible command
-slapp.message(/(?:[0-9]?[A-Za-z]{1,})+(?:[ +]\d+:\d+(?:-\d+)?)+/g, ['direct_mention', 'direct_message'], (msg, text) => {
+slapp.message(/.+(?:[0-9]?[A-Za-z]{1,})+(?:[ +]?\d+:\d+(?:-\d+)?)+.+/g, ['direct_mention', 'direct_message'], (msg, text) => {
   console.log('Received text command for Bible. Text entered: ' + text);
   var regex = /(?:[0-9]?[A-Za-z]{1,})+(?:[ +]\d+:\d+(?:-\d+)?)+/g;
 
-  msg.say('I saw the verse(s) ' + text.matchAll(regex));
+  msg.say('I saw the verse(s) ' + text.match(regex));
 
   // var parsedVerseData = parseVerseData(text)
   // var parsedText = parsedVerseData[0];
