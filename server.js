@@ -170,7 +170,7 @@ function reply(body, msg) {
 
   while (verse.startsWith('\n>')) {
     console.log('Removing newline from beginning');
-    verse = verse.replace(/^\\n>/, ''); // Remove all leading newlines.
+    verse = verse.replace(/\\n>/, ''); // Remove all leading newlines.
   }
 
   msg.say('Here\'s your verse!\n>' + verse);
