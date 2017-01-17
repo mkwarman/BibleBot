@@ -144,7 +144,7 @@ slapp
     if (matches.length === 1) {
       promptList = ' ' + matches[0];
     } else if (matches.length === 2) {
-      promptList = matches[0] + ' and ' + matches[1];
+      promptList = ' ' + matches[0] + ' and ' + matches[1];
     } else if (matches.length > 2) {
       for (var i = 0; i < matches.length; i++) {
         if (i === matches.length - 1) {
