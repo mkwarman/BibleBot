@@ -204,7 +204,7 @@ function formatThenReply(body, parsedBooks, parsedFirstVerses, msg) {
   console.log('got parsedFirstVerses as: ' + parsedFirstVerses);
   var verse = '';
 
-  console.log('Before sanitization:\n' + verse);
+  console.log('Before sanitization:\n' + body);
   // Replace special characters
   verse = body.replace(/<\/?b>/g, '*') // Fix bold formatting
               .replace(/<\/?i>/g, '_') // Fix italics formatting
