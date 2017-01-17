@@ -164,7 +164,7 @@ function parseVerseData(text) {
     var book = match[1];
 
     // See if there is a new book for the current verse
-    if (book === null) {
+    if (book === '') {
       // If the book was not changed
       booksArray.push(lastBook); // uUse the last book
     } else {
