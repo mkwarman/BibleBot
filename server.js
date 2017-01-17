@@ -113,15 +113,17 @@ slapp.command('/bible', /.*/, (msg, text) => {
   var parsedVerseData = parseVerseData(text)
   var parsedText = parsedVerseData[0];
   var parsedBooks = parsedVerseData[1];
-  var parsedVerses = parsedVerseData[2];
+  var parsedFullVerses = parsedVerseData[2];
+  var parsedMatchVerses = parsedVerseData[3];
 
   console.log('Interpreting requested verse as: ' + parsedText);
   msg.say('Interpreting requested verse as: ' + parsedText);
 
   console.log('got parsedBooks as: ' + parsedBooks);
-  console.log('got parsedVerses as: ' + parsedVerses);
+  console.log('got parsedFullVerses as: ' + parsedFullVerses);
+  console.log('got parsedMatchVerses as: ' + parsedMatchVerses);
 
-  sendRequest(parsedText, parsedBooks, parsedVerses, msg);
+  sendRequest(parsedText, parsedBooks, parsedFullVerses, parsedMatchVerses, msg);
 })
 
 // Catch-all for any other responses not handled above
@@ -153,9 +155,10 @@ function parseVerseData(text) {
   // }
 
   // ([0-9]?[A-Za-z]{1,}|[A-Za-z]{0,})\+([0-9]+:[0-9]+)
-  var regex = /([0-9]?[A-Za-z]{1,}|[A-Za-z]{0,})\+([0-9]+:[0-9]+)/g;
+  var regex = /([0-9]?[A-Za-z]{1,}|[A-Za-z]{0,})\+(([0-9]+:[0-9]+)(?:-\d+)?)/g;
   var booksArray = [];
-  var verseArray = [];
+  var matchVerseArray = [];
+  var fullVerseArray = [];
   var lastBook;
   var match;
 
@@ -173,28 +176,26 @@ function parseVerseData(text) {
       lastBook = book; // Save the new book
     }
 
-    // Save the verse
-    verseArray.push(match[2]);
+    // Save the full verse
+    fullVerseArray.push(match[2]);
+    matchVerseArray.push(match[3]);
   }
 
   console.log('Got books: ' + booksArray);
-  console.log('Got first verses: ' + verseArray);
+  console.log('Got first verses: ' + matchVerseArray);
 
-  var data = [verse, booksArray, verseArray];
+  var data = [verse, booksArray, fullVerseArray, matchVerseArray];
   return data;
 }
 
 // Send HTTP Request
-function sendRequest(parsedText, parsedBooks, parsedVerses, msg) {
+function sendRequest(parsedText, parsedBooks, parsedFullVerses, parsedMatchVerses, msg) {
   console.log('In sendRequest()...');
   var body;
   var options = {
     host: 'labs.bible.org',
     path: '/api/?passage=' + parsedText + '&formatting=full',
   }
-
-  console.log('got parsedBooks as: ' + parsedBooks);
-  console.log('got parsedVerses as: ' + parsedVerses);
 
   console.log('Request URL: labs.bible.org/api/?passage=' + parsedText + '&formatting=full');
 
@@ -213,7 +214,7 @@ function sendRequest(parsedText, parsedBooks, parsedVerses, msg) {
       console.log('-----finished body-----');
       body = Buffer.concat(bodyStream).toString();
       console.log('BODY: ' + body);
-      formatThenReply(body, parsedBooks, parsedVerses, msg);
+      formatThenReply(body, parsedBooks, parsedFullVerses, parsedMatchVerses, msg);
     })
   });
 
@@ -222,11 +223,9 @@ function sendRequest(parsedText, parsedBooks, parsedVerses, msg) {
   });
 }
 
-function formatThenReply(body, parsedBooks, parsedVerses, msg) {
+function formatThenReply(body, parsedBooks, parsedFullVerses, parsedMatchVerses, msg) {
   console.log('In formatThenReply()...');
 
-  console.log('got parsedBooks as: ' + parsedBooks);
-  console.log('got parsedVerses as: ' + parsedVerses);
   var verse = '';
 
   console.log('Before sanitization:\n' + body);
@@ -244,19 +243,20 @@ function formatThenReply(body, parsedBooks, parsedVerses, msg) {
   verse = body.replace(/<\/?b>/g, '*') // Fix bold formatting
               .replace(/<\/?i>/g, '_') // Fix italics formatting
               .replace(/&#8211;/g, '-') // Handle unicode dash character
-              .replace(/(<h\d>.{0,}<\/h\d>)([^\*]{0,}\*[^\*]{0,}\*[\S]{0,}\s)/g,
-                       '$2\n>*$1*\n>') // Fix space before headings and start bolding
+              .replace(/(<h\d>.{0,}<\/h\d>)([^\*]{0,}\*[^:\*]{0,}:([^\*]{0,}){0,}\*[\S]{0,}\s)/g,
+                       '$2\n>*$1*\n>*$3*') // Fix space before headings and start bolding
               .replace(/<p.{0,}?>/g, '\n>') // Fix newlines
               .replace(/<.+?>/g, '') // Remove all remaining HTML tags
-              .replace(/[\s>]{0,}(\*\d+:\d+\*)/g, '\n>$1') // Move new sections of the same book to new lines
+              .replace(/[\s>]{0,}(\*\d+:(\d+)\*(?![^A-Za-z]+>))/g,
+                       '\n>$1\n>*$2*') // Move new sections of the same book to new lines and copy verse number
               .replace(/^[\s]{0,}(?=>\*)/, ''); // Finally, remove all extra newlines at the beginning of the text
 
   console.log('After sanitization:\n' + verse);
 
   // Inject book titles
-  for (var i = 0; i < parsedVerses.length; i++) {
-    var replaceTarget = '>*' + parsedVerses[i] + '*';
-    var replacementString = '\n>*' + parsedBooks[i] + ' ' + parsedVerses[i] + '*';
+  for (var i = 0; i < parsedMatchVerses.length; i++) {
+    var replaceTarget = '>*' + parsedMatchVerses[i] + '*';
+    var replacementString = '\n>*' + parsedBooks[i] + ' ' + parsedFullVerses[i] + '*';
 
     verse = verse.replace(replaceTarget, replacementString);
 
