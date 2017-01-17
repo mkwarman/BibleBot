@@ -180,7 +180,7 @@ function reply(body, msg) {
 
 function parseVerse(text) {
   console.log('In parseVerse()...');
-  var verse = text.replace('/\s/g', '+')
+  var verse = text.replace(/\s/g, '+')
                   .replace(/([A-Za-z])(?=\d)/g, '$1+');
   return verse;
 }
