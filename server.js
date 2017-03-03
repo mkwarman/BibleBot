@@ -39,51 +39,6 @@ slapp.message('^(test|Test)$', ['mention', 'direct_message'], (msg) => {
   msg.say('I\'m here!');
 })
 
-// "Conversation" flow that tracks state - kicks off when user says hi, hello or hey
-slapp
-  .message('^(hi|hello|hey)$', ['direct_mention', 'direct_message'], (msg, text) => {
-    msg
-      .say(`${text}, how are you?`)
-      // sends next event from user to this route, passing along state
-      .route('how-are-you', { greeting: text })
-  })
-  .route('how-are-you', (msg, state) => {
-    var text = (msg.body.event && msg.body.event.text) || ''
-
-    // user may not have typed text as their next action, ask again and re-route
-    if (!text) {
-      return msg
-        .say("Whoops, I'm still waiting to hear how you're doing.")
-        .say('How are you?')
-        .route('how-are-you', state)
-    }
-
-    // add their response to state
-    state.status = text
-
-    msg
-      .say(`Ok then. What's your favorite color?`)
-      .route('color', state)
-  })
-  .route('color', (msg, state) => {
-    var text = (msg.body.event && msg.body.event.text) || ''
-
-    // user may not have typed text as their next action, ask again and re-route
-    if (!text) {
-      return msg
-        .say("I'm eagerly awaiting to hear your favorite color.")
-        .route('color', state)
-    }
-
-    // add their response to state
-    state.color = text
-
-    msg
-      .say('Thanks for sharing.')
-      .say(`Here's what you've told me so far: \`\`\`${JSON.stringify(state)}\`\`\``)
-    // At this point, since we don't route anywhere, the "conversation" is over
-  })
-
 // Can use a regex as well
 slapp.message(/^(thanks|thank you)/i, ['mention', 'direct_message'], (msg) => {
   // You can provide a list of responses, and a random one will be chosen
@@ -110,6 +65,20 @@ slapp.message('attachment', ['mention', 'direct_message'], (msg) => {
   })
 })
 
+// demonstrate returning an attachment...
+slapp.message('attachment', ['mention', 'direct_message'], (msg) => {
+  msg.say({
+    text: 'Check out this amazing attachment! :confetti_ball: ',
+    attachments: [{
+      text: 'Slapp is a robust open source library that sits on top of the Slack APIs',
+      title: 'Slapp Library - Open Source',
+      image_url: 'https://storage.googleapis.com/beepboophq/_assets/bot-1.22f6fb.png',
+      title_link: 'https://beepboophq.com/',
+      color: '#7CD197'
+    }]
+  })
+})
+
 // Bible command
 slapp.command('/bible', /.*/, (msg, text) => {
   console.log('Received slash command for Bible. Command entered: /bible ' + text);
@@ -120,7 +89,7 @@ slapp.command('/bible', /.*/, (msg, text) => {
   var parsedFullVerses = parsedVerseData[2];
   var parsedMatchVerses = parsedVerseData[3];
 
-  console.log('Interpreting requested verse as: ' + parsedText);
+  console.log('test change: ' + parsedText);
   msg.say('Give me just a sec while I grab that for you...');
 
   console.log('got parsedBooks as: ' + parsedBooks);
