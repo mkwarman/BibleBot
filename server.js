@@ -240,7 +240,8 @@ function parseVerseData(text) {
   // }
 
   // ([0-9]?[A-Za-z]{1,}|[A-Za-z]{0,})\+([0-9]+:[0-9]+)
-  var regex = /([0-9]?[A-Za-z]{1,}|[A-Za-z]{0,})\+(([0-9]+:[0-9]+)(?:-\d+)?)/g;
+  // var regex = /([0-9]?[A-Za-z]{1,}|[A-Za-z]{0,})\+(([0-9]+:[0-9]+)(?:-\d+)?)/g;
+  var regex = /([0-9]\+?[A-Za-z]{1,}|[A-Za-z]{0,})\+(([0-9]+:[0-9]+)(?:-\d+)?)/g;
   var booksArray = [];
   var matchVerseArray = [];
   var fullVerseArray = [];
@@ -249,7 +250,7 @@ function parseVerseData(text) {
 
   // For all results of the regex execution
   while (match = regex.exec(verse)) {
-    var book = match[1];
+    var book = match[1].replace(/\+/g, ' ');
 
     // See if there is a new book for the current verse
     if (book === '') {
