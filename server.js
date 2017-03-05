@@ -250,7 +250,7 @@ function parseVerseData(text) {
 
   // For all results of the regex execution
   while (match = regex.exec(verse)) {
-    var book = match[1].replace(/[a-z]/,function(match){return match.toUpperCase();})
+    var book = match[1].replace(/[a-zA-Z]/,function(match){return match.toUpperCase();})
                        .replace(/\+/g, ' ');
 
     // See if there is a new book for the current verse
