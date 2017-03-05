@@ -250,12 +250,13 @@ function parseVerseData(text) {
 
   // For all results of the regex execution
   while (match = regex.exec(verse)) {
-    var book = match[1].replace(/\+/g, ' ');
+    var book = match[1].replace(/[a-z]/,function(match){return match.toUpperCase();})
+                       .replace(/\+/g, ' ');
 
     // See if there is a new book for the current verse
     if (book === '') {
       // If the book was not changed
-      booksArray.push(lastBook); // uUse the last book
+      booksArray.push(lastBook); // Use the last book
     } else {
       // If the book was changed
       booksArray.push(book); // Use the new book
