@@ -37,6 +37,10 @@ slapp.message('help', ['mention', 'direct_message'], (msg) => {
 // response to the user typing "test"
 slapp.message('^(test|Test)$', ['mention', 'direct_message'], (msg) => {
   msg.say('I\'m here!');
+     .say({
+       text: 'Test ephemeral message',
+       response_type: "ephemeral",
+     })
 })
 
 // "Conversation" flow that tracks state - kicks off when user says hi, hello or hey
