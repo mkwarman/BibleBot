@@ -36,11 +36,7 @@ slapp.message('help', ['mention', 'direct_message'], (msg) => {
 
 // response to the user typing "test"
 slapp.message('^(test|Test)$', ['mention', 'direct_message'], (msg) => {
-  msg.say('I\'m here!')
-     .say({
-       text: 'Test ephemeral message',
-       response_type: "ephemeral",
-     })
+  msg.say('I\'m here!');
 })
 
 // "Conversation" flow that tracks state - kicks off when user says hi, hello or hey
@@ -141,85 +137,89 @@ slapp
     console.log('Received text command for Bible. Text entered: ' + text);
     var regex = /(?:[0-9]? ?[A-Za-z]{1,})+(?:[ +]\d+(:\d+(?:-\d+)?)?)+/g;
     var matches = text.match(regex);
-    var promptList = '';
-    var reply = '';
-    var plural = false;
 
-    if (matches.length === 1) {
-      promptList = ' ' + matches[0];
-    } else if (matches.length === 2) {
-      promptList = ' ' + matches[0] + ' and ' + matches[1];
-    } else if (matches.length > 2) {
-      for (var i = 0; i < matches.length; i++) {
-        if (i === matches.length - 1) {
-          promptList = promptList + ' and ' + matches[i];
-        } else {
-          promptList = promptList + ' ' + matches[i] + ',';
-        }
-      }
-    }
+    // ------ Code for asking for confirmation prior to displaying verses ------
+    // var promptList = '';
+    // var plural = false;
 
-    plural = (matches.length > 1);
+    // if (matches.length === 1) {
+    //   promptList = ' ' + matches[0];
+    // } else if (matches.length === 2) {
+    //   promptList = ' ' + matches[0] + ' and ' + matches[1];
+    // } else if (matches.length > 2) {
+    //   for (var i = 0; i < matches.length; i++) {
+    //     if (i === matches.length - 1) {
+    //       promptList = promptList + ' and ' + matches[i];
+    //     } else {
+    //       promptList = promptList + ' ' + matches[i] + ',';
+    //     }
+    //   }
+    // }
+    //
+    // plural = (matches.length > 1); Only needed for confirmation logic
 
     msg
-      .say('I found the verse' + (plural ? 's:' : ':') + promptList)
-      .say('Would you like me to show ' + (plural ? 'them?' : 'it?'))
-      .route('show-or-not', matches, plural);
+      // .say('Great! Give me just a sec while I grab that for you...')
+      .say('Give me just a sec while I grab that for you...')
+      var parsedVerseData = parseVerseData(parseVersesFromArray(matches))
+      var parsedText = parsedVerseData[0];
+      var parsedBooks = parsedVerseData[1];
+      var parsedFullVerses = parsedVerseData[2];
+      var parsedMatchVerses = parsedVerseData[3];
 
-    // var parsedVerseData = parseVerseData(text)
-    // var parsedText = parsedVerseData[0];
-    // var parsedBooks = parsedVerseData[1];
-    // var parsedFullVerses = parsedVerseData[2];
-    // var parsedMatchVerses = parsedVerseData[3];
-    //
-    // console.log('Interpreting requested verse as: ' + parsedText);
-    // msg.say('Interpreting requested verse as: ' + parsedText);
-    //
-    // console.log('got parsedBooks as: ' + parsedBooks);
-    // console.log('got parsedFullVerses as: ' + parsedFullVerses);
-    // console.log('got parsedMatchVerses as: ' + parsedMatchVerses);
-    //
-    // sendRequest(parsedText, parsedBooks, parsedFullVerses, parsedMatchVerses, msg);
-  })
-  .route('show-or-not', (msg, matches, plural) => {
-    var text = (msg.body.event && msg.body.event.text) || ''
+      console.log('Interpreting requested verse as: ' + parsedText);
+      console.log('got parsedBooks as: ' + parsedBooks);
+      console.log('got parsedFullVerses as: ' + parsedFullVerses);
+      console.log('got parsedMatchVerses as: ' + parsedMatchVerses);
 
-    if (!text.match(/yes|no/ig)) {
-      return msg
-        .say('Sorry, I didn\'t understand that.')
-        .say('Would you like me to show the verse' + (plural ? 's?' : '?'))
-        .route('show-or-not');
-    }
-
-    if (text.match(/yes/ig)) {
-      msg
-        .say('Great! Give me just a sec while I grab that for you...')
-        var parsedVerseData = parseVerseData(parseVersesFromArray(matches))
-        var parsedText = parsedVerseData[0];
-        var parsedBooks = parsedVerseData[1];
-        var parsedFullVerses = parsedVerseData[2];
-        var parsedMatchVerses = parsedVerseData[3];
-
-        console.log('Interpreting requested verse as: ' + parsedText);
-        console.log('got parsedBooks as: ' + parsedBooks);
-        console.log('got parsedFullVerses as: ' + parsedFullVerses);
-        console.log('got parsedMatchVerses as: ' + parsedMatchVerses);
-
-        sendRequest(parsedText, parsedBooks, parsedFullVerses, parsedMatchVerses, msg);
-    }
-
-    if (text.match(/no/ig)) {
-      return msg
-        .say('Ok.');
-    }
-  })
-
-// Catch-all for any other responses not handled above
-slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
-  // respond only 40% of the time
-  if (Math.random() < 0.4) {
-    msg.say([':wave:', ':pray:', ':raised_hands:'])
-  }
+      sendRequest(parsedText, parsedBooks, parsedFullVerses, parsedMatchVerses, msg);
+//
+// --------------- Code for asking for confirmation prior to displaying verses ----------------
+//
+//       .say('I found the verse' + (plural ? 's:' : ':') + promptList)
+//       .say('Would you like me to show ' + (plural ? 'them?' : 'it?'))
+//       .route('show-or-not', matches, plural);
+//
+// })
+//   .route('show-or-not', (msg, matches, plural) => {
+//     var text = (msg.body.event && msg.body.event.text) || ''
+//
+//     if (!text.match(/yes|no/ig)) {
+//       return msg
+//         .say('Sorry, I didn\'t understand that.')
+//         .say('Would you like me to show the verse' + (plural ? 's?' : '?'))
+//         .route('show-or-not');
+//     }
+//
+//     if (text.match(/yes/ig)) {
+//       msg
+//         .say('Great! Give me just a sec while I grab that for you...')
+//         var parsedVerseData = parseVerseData(parseVersesFromArray(matches))
+//         var parsedText = parsedVerseData[0];
+//         var parsedBooks = parsedVerseData[1];
+//         var parsedFullVerses = parsedVerseData[2];
+//         var parsedMatchVerses = parsedVerseData[3];
+//
+//         console.log('Interpreting requested verse as: ' + parsedText);
+//         console.log('got parsedBooks as: ' + parsedBooks);
+//         console.log('got parsedFullVerses as: ' + parsedFullVerses);
+//         console.log('got parsedMatchVerses as: ' + parsedMatchVerses);
+//
+//         sendRequest(parsedText, parsedBooks, parsedFullVerses, parsedMatchVerses, msg);
+//     }
+//
+//     if (text.match(/no/ig)) {
+//       return msg
+//         .say('Ok.');
+//     }
+//   })
+//
+// // Catch-all for any other responses not handled above
+// slapp.message('.*', ['direct_mention', 'direct_message'], (msg) => {
+//   // respond only 40% of the time
+//   if (Math.random() < 0.4) {
+//     msg.say([':wave:', ':pray:', ':raised_hands:'])
+//   }
 })
 
 // Sanitize verses and get book and first verse data
