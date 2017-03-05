@@ -36,7 +36,7 @@ slapp.message('help', ['mention', 'direct_message'], (msg) => {
 
 // response to the user typing "test"
 slapp.message('^(test|Test)$', ['mention', 'direct_message'], (msg) => {
-  msg.say('I\'m here!');
+  msg.say('I\'m here!')
      .say({
        text: 'Test ephemeral message',
        response_type: "ephemeral",
