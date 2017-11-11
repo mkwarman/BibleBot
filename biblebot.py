@@ -1,21 +1,23 @@
 import os
-
+import time
+import api
+#import re
 from slackclient import SlackClient
 
 # constants
 BOT_NAME = os.environ.get('BOT_NAME')#"biblebot"
+READ_WEBSOCKET_DELAY = .5 # .5 second delay between reading from firehose
+CONNECTION_ATTEMPT_RETRY_DELAY = 1
 
 # globals
 global at_bot_id
 
+# instantiate Slack & Twilio clients
+slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
+
 def handle_text(text, channel, message_data):
-    print("Handling text")
-    bot_match = "<@" + at_bot_id + ">"
-    if (text.startswith(bot_match) and not re.search('^ ?(--|\+\+)', text[len(bot_match):])):
-        print("Received command: " + text)
-        return handle_command(text, channel, message_data)
-    elif 'user' in message_data and message_data['user'] not in ignored_users:
-        check_user_text(text, channel, message_data, False)
+    print("Handling text: " + text)
+    #bot_match = "<@" + at_bot_id + ">"
 
     return True
 
@@ -41,7 +43,7 @@ if __name__ == "__main__":
         try:
             if slack_client.rtm_connect():
                 # Startup tasks
-                print("StokeBot connected and running!")
+                print("BibleBot connected and running!")
                 global at_bot_id
                 at_bot_id = api.get_user_id(BOT_NAME) # Get the bot's ID
                 while run:
