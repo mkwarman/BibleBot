@@ -1,7 +1,7 @@
 import os
 import time
 import api
-#import re
+import re
 from slackclient import SlackClient
 
 # constants
@@ -18,8 +18,18 @@ slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
 def handle_text(text, channel, message_data):
     print("Handling text: " + text)
     #bot_match = "<@" + at_bot_id + ">"
+    reference_regex = re.compile(r'(?:((?:[0-9] ?)?[A-Za-z]+) ?([\d:-]+))')
+    references = reference_regex.findall(text)
+    for reference in references:
+        handle_reference(reference, channel)
 
     return True
+
+def handle_reference(reference, channel):
+    book = reference[0]
+    verses = reference[1]
+
+    print("Found book: " + book + ", verse: " + verse)
 
 def listen_for_text(slack_rtm_output):
     """
