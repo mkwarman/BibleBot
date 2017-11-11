@@ -27,7 +27,7 @@ def handle_text(text, channel, message_data):
 
 def handle_reference(reference, channel):
     book = reference[0]
-    verses = reference[1]
+    verse = reference[1]
 
     print("Found book: " + book + ", verse: " + verse)
 
