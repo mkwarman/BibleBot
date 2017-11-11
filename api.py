@@ -116,6 +116,15 @@ def get_user_id(user_name):
 #         print("is_private encountered unhandled ID")
 #         return True
 
+def call_bible_api(query):
+    url = ('http://labs.bible.org/api/?passage=%s' %word)
+    print(url)
+    response = requests.get(url)
+    if response.ok:
+        return response
+    else:
+        print("Encountered error while trying to call dictionary API")
+
 def send_reply(text, channel):
     slack_client.api_call("chat.postMessage", channel=channel,
                           text=text, as_user=True)
